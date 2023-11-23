@@ -1,0 +1,220 @@
+/** Shopify CDN: Minification failed
+
+Line 16:0 Transforming let to the configured target environment ("es5") is not supported yet
+Line 35:6 Transforming const to the configured target environment ("es5") is not supported yet
+Line 95:2 Transforming let to the configured target environment ("es5") is not supported yet
+Line 96:4 Transforming let to the configured target environment ("es5") is not supported yet
+Line 114:2 Transforming let to the configured target environment ("es5") is not supported yet
+Line 115:4 Transforming let to the configured target environment ("es5") is not supported yet
+Line 121:6 Transforming let to the configured target environment ("es5") is not supported yet
+Line 126:4 Transforming let to the configured target environment ("es5") is not supported yet
+Line 154:8 Transforming let to the configured target environment ("es5") is not supported yet
+Line 164:10 Transforming let to the configured target environment ("es5") is not supported yet
+... and 5 more hidden warnings
+
+**/
+let _utils = (function() {
+  return {
+    handle: function(value) {
+      return value.toLowerCase().replace(' ', '-');      
+    },
+    
+    resize_img: function(src, size) {
+      var resized = src || '';
+      resized = resized.replace('.png', `_${size}.png`);
+      resized = resized.replace('.jpg', `_${size}.jpg`);
+
+      return resized;    
+    },
+    
+    formatMoney: function(value) {
+      return theme.Currency.formatMoney(value);    
+    },
+    
+    postData: function (url, data) {
+      const response = fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        redirect: 'follow',
+        referrerPolicy: 'no-referrer',
+        body: JSON.stringify(data)
+      });
+      return response;
+    },
+    
+    addItemsToCart: function(items) {
+      return this.postData('/cart/add.js', {items: items})
+    },
+    
+    getRandomUniqId: function() {
+      return Math.random().toString(36).substr(2, 8);
+    },
+    
+    getCart: function() {
+      return $.getJSON('/cart.js');
+    },
+    
+    refreshCart: function() {
+      document.dispatchEvent(new CustomEvent("cart:build", {}));
+      
+      setTimeout(function() {
+        document.dispatchEvent(new CustomEvent("cart:open", {}));
+        document.dispatchEvent(new CustomEvent("cart:updated", {}));
+      }, 100);
+    },
+    
+    checkout: function() {
+      window.location.href = '/checkout';
+    },
+    
+    subscription_checkout: function() {
+      this.getCart().then(cart => {
+        var checkoutUrl = `https://checkout.rechargeapps.com/r/checkout?domain=${Shopify.shop}&cart_token=${cart.token}`;
+        window.location.href = checkoutUrl;
+      });
+    },
+    
+    clearCart: function() {
+      return new Promise(function(resolve, reject) {
+        $.post('/cart/clear.js', {}, null, 'json');
+        
+        setTimeout(function() {
+          resolve();
+        }, 250);
+      });
+    }
+  };
+})();
+
+(function () {
+  let ResetPotUpsells = () => {
+    let pot_carousels = document.querySelectorAll('[data-pots-carousel]');
+    
+    // carousel
+    pot_carousels.forEach(section => {
+      section.style.height = section.clientHeight + 'px';
+        
+      var flkty = Flickity.data(section);
+      var options = flkty.options;
+      flkty.destroy();
+      
+      section.style.height = 'auto';
+      setTimeout(function() {
+        section.style.height = section.clientHeight + 'px';
+        flkty = new Flickity(section, options);
+      }, 250);
+    });
+  }  
+  
+  let PotUpsells = () => {
+    let pot_carousels = document.querySelectorAll('[data-pots-carousel]');
+    
+    // carousel
+    pot_carousels.forEach(section => {
+      section.style.height = section.clientHeight + 'px';
+        
+      let options = JSON.parse(section.dataset.flickityOptions);
+      var flkty = new Flickity(section, options);
+    });
+    
+    // pot selection
+    let pot_selected_class = 'selected-pot';
+    document.querySelectorAll('.pot-wrapper').forEach(pot => {
+      pot.addEventListener('click', (e) => {
+        //console.log(e);
+        if (pot.classList.contains(pot_selected_class)) {
+          pot.classList.remove(pot_selected_class);
+        }
+        else {
+          document.querySelectorAll(`.pot-wrapper.${pot_selected_class}`).forEach(selected_pot => {
+            selected_pot.classList.remove(pot_selected_class);
+          });
+
+          pot.classList.add(pot_selected_class);
+        }
+      });
+    });
+    
+    // hide buy now button if pot upsells exist
+    if (pot_carousels.length) {
+      var shopify_btns = document.querySelector('.shopify-payment-button');
+      if (shopify_btns) {
+        shopify_btns.remove();
+      }
+    }      
+    
+    // add to cart
+    if (pot_carousels.length) {
+      document.querySelectorAll('[data-add-to-cart]').forEach(btn_atc => {
+        let new_btn_html = `
+          <div class="btn btn--full btn--secondary add-to-cart--upsells">
+            <span>Add to cart</span>
+          </div>
+		`;
+        
+        btn_atc.insertAdjacentHTML('afterEnd', new_btn_html);
+        btn_atc.classList.add('hide');
+        
+        document.querySelector('.add-to-cart--upsells').addEventListener('click', (e) => {
+          let form = e.currentTarget.closest('.product-single__form');
+          let main_variant = form.querySelector('select[name="id"]').value;
+          let selectedPot = document.querySelector(`.pot-wrapper.${pot_selected_class}`);
+          let pot_variant = selectedPot ? selectedPot.dataset.potVariant : null;
+          
+          let items_to_add = [
+            { id: main_variant, quantity: 1}
+          ];
+          
+          if (pot_variant) {
+            items_to_add.push({id: pot_variant, quantity: 1});
+          }
+          
+          console.log(items_to_add);
+          
+          _utils.addItemsToCart(items_to_add)
+          .then(response => {
+            console.log(response);
+            _utils.refreshCart();
+          })
+          .catch(error => {
+            console.error(error);
+          });     
+        });
+      });
+    }
+    
+    // Plant Variant Selection - change pots
+    document.addEventListener('variant:change', function(e) {
+      var variant = e.detail.variant;
+      document.querySelectorAll('.section--pots-upsells').forEach($section => {
+        var isCurrentVariant = $section.dataset.variant == variant.id;
+        $section.classList[isCurrentVariant ? 'remove' : 'add']('visually-hidden');
+        var $sectionCarousel = $section.querySelector('[data-pots-carousel]');
+        
+        $section.querySelectorAll('.' + pot_selected_class).forEach(function(item) {
+          item.classList.remove(pot_selected_class);
+        });
+
+        if (isCurrentVariant && $sectionCarousel) {
+          ResetPotUpsells();
+        }
+      });
+      
+      document.querySelector('.add-to-cart--upsells').classList[variant.available ? 'remove' : 'add']('hide');
+    });
+
+    const mq_768 = window.matchMedia('(max-width: 768px)');
+    mq_768.addEventListener('change', (e) => {
+      ResetPotUpsells();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(e) {
+    setTimeout(PotUpsells, 500);
+  });
+})();

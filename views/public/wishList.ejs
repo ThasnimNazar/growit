@@ -1,0 +1,177 @@
+<%- include('../public/includes/header.ejs') %>
+
+<style>
+  
+  .table-striped tbody tr:nth-child(even) {
+    background-color: white; /* Light gray background color for even rows */
+  }
+
+  .table-striped tbody tr:nth-child(odd) {
+    background-color: rgb(255, 207, 215); /* White background color for odd rows */
+  }
+</style>
+
+<h4>Wishlist</h4>
+
+<main class="main">
+    <div class="page-header breadcrumb-wrap">
+   
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+              <div class="card" style="padding-bottom: 20px; border-color:rgb(255, 207, 215) ;">
+                <div class="col-12">
+                        <table class="table table-striped">
+                            <thead class="header">
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Stock status</th>
+                                    <th scope="col">Action</th>
+                                    <th scope="col">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let i =0 ; i < products.length ; i ++) { %>
+                                <tr>
+                                    <td class="image product-thumbnail"><img src="../public/product-images/create-images/<%=products[i].images[0]%>" alt="" style="width: 100px; height: 100px;"></td>
+                                    <td class="product-des product-name">
+                                        <p class="name" style="color: black;"><a href=""><%=products[i].name%></a></p>
+                                        <!-- <p class="font-xs text-truncate"></p> -->
+                                    </td>
+                                    <td class="price" data-title="Price"><span>₹<%=products[i].price%> </span></td>
+                                    <td class="text-center" data-title="Stock">
+
+                                        <% if(products[i].stock) { %>
+                                        <span class="color3 font-weight-bold">In Stock</span>
+                                       <% } else {%>
+                                         <span class="color3 font-weight-bold">Out Of Stock</span>
+                                        <% }  %>
+
+                                    </td>
+                                    <td class="text-right" data-title="Cart">
+                                       
+                                            <a class="btn btn-sm" onclick="addToCart('<%=products[i].item %>')"><i class="fas fa-shopping-cart"></i></a>
+                                           
+                                                
+                                    </td>
+                                    <td class="action" data-title="Remove"><a class="delete-product" data-product-id="<%=products[i].item%>"><i class="fa-solid fa-trash-can"></i></a></td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                            
+                                <!-- <h5>Wishlist is empty</h5>
+                                <br> -->
+                                
+                        </table>
+                </div>
+              </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+<!-- //Delete_From_Wishlist -->
+<script>
+$(document).ready(function () {
+ $(".delete-product").on("click", function (event) {
+   console.log('rrrrrrrr')
+   event.preventDefault();
+   var productId = $(this).data("product-id");
+   var deleteButton = $(this);
+
+   // Show SweetAlert confirmation dialog
+   Swal.fire({
+     title: 'Are you sure?',
+     text: "You won't be able to revert this!",
+     icon: 'warning',
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Yes, delete it!'
+   }).then((result) => {
+     if (result.isConfirmed) {
+       // If the user confirms, make the AJAX request to delete the product
+       $.ajax({
+         url: "/deletewishlist", // The route to your Express server
+         type: "POST",
+         data: { productId: productId }, // Send the product ID in the request body
+         success: function (response) {
+           // If the server returns a successful response, remove the product row from the table
+           if (response.message === "Product deleted successfully") {
+            const wishlistCount = response.wishlistLength;
+            updateWishlistCountInDOM(wishlistCount);
+             // Remove the product row with SweetAlert success message
+             Swal.fire(
+               'Deleted!',
+               'Your file has been deleted.',
+               'success'
+             ).then(() => {
+               deleteButton.closest("tr").remove();
+             });
+           }
+         },
+         error: function (xhr, status, error) {
+           // Handle error, if any
+           console.log("Error:", error);
+         },
+       });
+     }
+   });
+ });
+});
+
+function updateWishlistCountInDOM(wishlistCount) {
+  const wishlistCountElement = document.querySelector("#wish-count");
+  if (wishlistCountElement) {
+    wishlistCountElement.textContent = wishlistCount.toString();
+  }
+}
+
+</script>
+
+<script>
+  function addToCart(ProductId){
+      console.log("addtocart")
+   $.ajax({
+
+      url:`/addtocart/`+ProductId,
+      method:'post',
+      success: (response) => {
+  if (response.status==true) {
+  Swal.fire({
+    title: 'Your Product has been added to Cart',
+    icon: 'success',
+            iconColor:'#FC54AD',
+    timer: 5000
+  })
+      }else if(response.status=='outOfStock'){
+  Swal.fire({
+    title: 'Product out of Stock',
+    icon: 'error',
+    timer: 5000
+  })
+      }else if(response.status=='blocked'){
+  Swal.fire({
+    title: 'You are blocked',
+    icon: 'error',
+    timer: 5000
+  })
+  setTimeout(() => {
+    window.location.href="/logout"
+  },5000)
+      }
+  }
+   })
+
+  }
+
+</script>
+
+<%- include('../public/includes/footer.ejs')%>

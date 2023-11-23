@@ -1,0 +1,78 @@
+<%- include('./includes/header.ejs') %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="userAssets/css/loginstyle.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <!-- Tabs Titles -->
+          <h2 class="active"> Sign Up </h2>
+          <!-- <h2 class="inactive underlineHover">Sign Up </h2> -->
+      
+          <!-- Icon -->
+          <span style="color: red;"><%=(typeof message!=='undefined')?message:""%></span>
+          <!-- Login Form -->
+          <form action="/verify" method="POST">
+           
+
+           
+
+            <input type="text"  class="fadeIn second" name="mobileno" id="mobileno" placeholder="mobileno">
+            <span class="error" id="mobileError"></span>
+
+           
+
+            <input type="submit" class="fadeIn fourth"  value="send Otp">
+          </form>
+      
+          <!-- Remind Passowrd -->
+          <!-- <div id="formFooter">
+            <a class="underlineHover" href="/loadforget">Forgot Password?</a>
+          </div> -->
+      
+        </div>
+      </div>
+
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+
+<script>
+  console.clear();
+
+const loginBtn = document.getElementById('login');
+const signupBtn = document.getElementById('signup');
+
+loginBtn.addEventListener('click', (e) => {
+	let parent = e.target.parentNode.parentNode;
+	Array.from(e.target.parentNode.parentNode.classList).find((element) => {
+		if(element !== "slide-up") {
+			parent.classList.add('slide-up')
+		}else{
+			signupBtn.parentNode.classList.add('slide-up')
+			parent.classList.remove('slide-up')
+		}
+	});
+});
+
+signupBtn.addEventListener('click', (e) => {
+	let parent = e.target.parentNode;
+	Array.from(e.target.parentNode.classList).find((element) => {
+		if(element !== "slide-up") {
+			parent.classList.add('slide-up')
+		}else{
+			loginBtn.parentNode.parentNode.classList.add('slide-up')
+			parent.classList.remove('slide-up')
+		}
+	});
+});
+</script>
+
+<%- include('../public/includes/footer.ejs')%>

@@ -1,0 +1,14 @@
+<%- include('./includes/header.ejs')
+
+<section class="vh-100 d-flex align-items-center">
+    <div class="container text-center">
+      <h1 class="text-warning display-4">Welcome Home</h1>
+      <br>
+      <h2 class="text-primary">Hello, <%= user.name %></h2>
+      <br><br>
+      <a class="btn btn-warning btn-lg btn-block" href="/logout">Logout</a>
+    </div>
+  </section>
+
+  
+  <%- include('./includes/footer.ejs')

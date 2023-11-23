@@ -1,0 +1,283 @@
+<%- include('../public/includes/header.ejs') %>
+
+
+<section style="background-color: white">
+    <div class="container py-5">
+      <div class="row">
+        <div class="col">
+          <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+            <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">User</a></li>
+              <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+
+    
+      <a href="/loadadd">
+        <button type="button" class="btn1" style="margin-left: 999px; border-radius: 5px; background-color: rgb(252, 84, 173); font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; border-color:transparent;">Add address</button>
+      </a>
+
+    <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px;">
+              <h5 class="my-3"><%= user.name %></h5>
+              <p class="text-muted mb-1"><%= user.email %></p>
+              <p class="text-muted mb-4"><%= user.mobileno%></p>
+
+              <div class="d-flex justify-content-center mb-2">
+                <a href="/profile">
+                <!-- <button type="button" class="btn btn-primary">Follow</button> -->
+                <button type="button" class="btn btn-outline-success ms-1">Profile</button>
+              </a>
+              </div>
+
+              <div class="d-flex justify-content-center mb-2">
+                <a href="/orderPage">
+                <button type="button" class=" btn btn-outline-success ms-1">Orders</button>
+              </a>
+              </div>
+
+              <div class="d-flex justify-content-center mb-2">
+                <a href="/Address">
+                 <button type="button" class=" btn btn-outline-success ms-1">Address</button>
+              </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-8" style="margin-top: 30px; border-color: black;">
+         <table class="table table-striped" style="table-layout: fixed;">
+           
+            <tbody>
+               
+                    <% arr.forEach((address)=>{%>
+                      <tr>
+                        <td style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;"><%= address.name %></td>
+                        <td style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;"><%= address.mobileNumber %></td>
+                        <td style="margin-right: 20px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+                          <%= address.address %>
+                           <%= address.locality %>,
+                          <%= address.city %>,
+                          <%= address.pincode %>,
+                          <%= address.state %>
+                        </td>
+                        <td>
+                          <div class="button">
+                           
+                              <button type="button" class="btn btn-success"   onclick="editAddress(<%= JSON.stringify(address) %>)">Edit</button>
+                           
+                          </div>
+                        </td>
+                          <td>
+                          <div class="button">
+                            
+                              <button type="button" style="background-color: rgb(61, 58, 58); border-radius: 5px; border-color: transparent; color: white; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" onclick="deleteAddress('<%=address._id %>')" data-bs-target="#deleteAddressModal">Delete</button>
+                            
+                          </div>
+                        </td>
+                    
+                        </tr>
+                        <%})%>
+            </tbody>
+            
+         </table>
+        </div>
+    </div>
+
+
+    <div class="form-popup" id="popupForm">
+      <div class="form-container">
+        <h3>Edit Address</h3>
+        <input type="hidden" id="idInput" placeholder="Name" />
+
+        <input type="text" id="nameInput" placeholder="Name" />
+        <input
+          type="text"
+          id="mobileNumberInput"
+          placeholder="Mobile Number"
+        />
+        <input type="text" id="addressInput" placeholder="Address" />
+        <input type="text" id="localityInput" placeholder="Locality" />
+        <input type="text" id="cityInput" placeholder="City" />
+        <input type="text" id="pincodeInput" placeholder="Pincode" />
+        <input type="text" id="stateInput" placeholder="State" />
+
+        <div class="btn-group">
+          <button type="button" class="btn" onclick="closePopupedit()">
+            Close
+          </button>
+          <button type="button" class="btn" onclick="saveAddressedit()">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+</section>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+<script>
+  function deleteAddress(addressId){
+    Swal.fire({
+      title:'Are you sure you want to delete this Address!?',
+      text:"",
+      icon:'warning',
+      iconColor:'#406E25',
+      showCancelButton: true,
+      confirmButtonColor: '#FC54AD',
+      cancelButtonColor: '#3D3A3A',
+      confirmButtonText: 'Yes, Delete!',
+      timer: 60000
+    })
+    .then((result)=>{
+      if(result.isConfirmed){
+        console.log(addressId,"here")
+        $.ajax({
+          url:'/deleteAddress',
+          method:'POST',
+          data:{
+            addressId:addressId
+          },
+          success:(response)=>
+      {
+          if(response)
+        {
+          // location.reload()
+        }
+      }
+    })
+  }
+ })
+}
+
+
+
+  function editAddress(address) {
+    console.log("here", address);
+
+    // Populate the form inputs with the address details
+    document.getElementById("idInput").value = address._id;
+    document.getElementById("nameInput").value = address.name;
+    document.getElementById("mobileNumberInput").value =
+      address.mobileNumber;
+    document.getElementById("addressInput").value = address.address;
+    document.getElementById("localityInput").value = address.locality;
+    document.getElementById("cityInput").value = address.city;
+    document.getElementById("pincodeInput").value = address.pincode;
+    document.getElementById("stateInput").value = address.state;
+
+    // Show the popup form
+    var popupForm = document.getElementById("popupForm");
+    popupForm.style.display = "block";
+  }
+
+  function closePopupedit() {
+    // Close the popup form
+    var popupForm = document.getElementById("popupForm");
+    popupForm.style.display = "none";
+  }
+
+  function saveAddressedit() {
+    // Get the input values
+    var id = document.getElementById("idInput").value;
+    var name = document.getElementById("nameInput").value;
+    var mobileNumber = document.getElementById("mobileNumberInput").value;
+    var address = document.getElementById("addressInput").value;
+    var locality = document.getElementById("localityInput").value;
+    var city = document.getElementById("cityInput").value;
+    var pincode = document.getElementById("pincodeInput").value;
+    var state = document.getElementById("stateInput").value;
+
+    // Validate the input values
+    if (name.trim() === "") {
+      alert("Name cannot be empty");
+      return;
+    }
+    if (!/^[a-zA-Z ]+$/.test(name)) {
+      alert("Name should not contain numbers or special characters");
+      return;
+    }
+    if (mobileNumber.trim() === "") {
+      alert("Mobile Number cannot be empty");
+      return;
+    }
+    if (!/^\+?\d{1,12}$/.test(mobileNumber)) {
+      alert("Mobile Number should contain a maximum of 12 numbers only");
+      return;
+    }
+    if (address.trim() === "") {
+      alert("Address cannot be empty");
+      return;
+    }
+    if (locality.trim() === "") {
+      alert("Locality cannot be empty");
+      return;
+    }
+    if (city.trim() === "") {
+      alert("City cannot be empty");
+      return;
+    }
+    if (pincode.trim() === "") {
+      alert("Pincode cannot be empty");
+      return;
+    }
+    if (!/^\d{6}$/.test(pincode)) {
+      alert("Pincode should contain exactly 6 digits");
+      return;
+    }
+    if (state.trim() === "") {
+      alert("State cannot be empty");
+      return;
+    }
+
+    var formData = {
+      id: id,
+      name: name,
+      mobileNumber: mobileNumber,
+      address: address,
+      locality: locality,
+      city: city,
+      pincode: pincode,
+      state: state,
+    };
+
+    // Send the form data to the server using AJAX
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/edit", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        // Reload the section of the address table
+        var addressTableSection = document.getElementById(
+          "addressTableSection"
+        );
+        addressTableSection.innerHTML = xhr.responseText;
+      }
+    };
+    xhr.send(JSON.stringify(formData));
+
+    closePopupedit();
+    location.reload();
+  }
+
+  </script>
+
+<script
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+crossorigin="anonymous"
+></script>
+
+
+<%- include('../public/includes/footer.ejs') %>

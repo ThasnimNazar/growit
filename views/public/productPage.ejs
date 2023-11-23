@@ -1,0 +1,188 @@
+<!-- include header -->
+
+<%- include('../public/includes/header.ejs') %>
+
+
+<link rel='stylesheet' href='https://unpkg.com/xzoom/dist/xzoom.css'>
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="row gx-4 gx-lg-5 align-datas-center">
+                <div class="col-lg-4 pt-5">
+                  <div class="large-5 column">
+                    <div class="xzoom-container">
+                      <img class="xzoom" id="xzoom-default" src="./product-images/create-images/<%= product.images[0]%>" xoriginal="./product-images/create-images/<%= product.images[0]%>" style="border-radius: 5px;" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-8">
+                <div class="card" style="margin-top: 80px;">
+                 <div class="card-body">
+                  <h3 class="text" style="color: rgb(64, 110, 37); font-weight: 300; font-style:unset; font-family: Verdana, Geneva, Tahoma, sans-serif;"><%= product.name %></h3>
+                  <p style="font-weight: 750;"><%= product.description %></p>
+                  <span>Category</span> :<p><%=product.category.name.toUpperCase()%></p>
+                  <h3>Price:₹ <%= product.price %></h3>
+                  <% if (product.stock) { %>
+                    <h5>In Stock</h5>
+                    <% } else { %>
+                      <!-- Product is out of stock -->
+                      <h5 class="out-of-stock">Out of Stock</h5>
+                    <% } %>
+                  <div class="purchase-info" >
+                      <button type="submit" class="btn1" style="font-size: larger; border-radius: 5px; padding: auto;
+                      border: 2px;" onclick="addToCart('<%=product._id %>')">
+                          Add To Cart <i class="fas fa-shopping-cart"></i>
+                      </button>
+
+                 
+                      <button type="button" class="btn2" style="color: deeppink; font-size: larger; border-radius: 5px; border-color: transparent; font-style: normal; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;"  id="wishlistButton_<%= product._id %>"  onclick="addToWishlist('<%=product._id%>')">
+                        Wishlist <i class="fas fa-heart"></i>
+                    </button>
+                      <!-- <button onclick="addToCart('<%=product._id %>')">You</button>
+                      <button type="button" class="btn2" style="color: deeppink; font-size: larger; border-radius: 5px; border-color: transparent; font-style: normal; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+                          Wishlist <i class="fas fa-heart"></i>
+                      </button> -->
+                  </div>
+                 </div>
+                </div>    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src='https://code.jquery.com/jquery-1.11.0.js'></script>
+    <script src='https://unpkg.com/xzoom/dist/xzoom.min.js'></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script>
+        (function ($) {
+            $(document).ready(function() {
+                $('.xzoom, .xzoom-gallery').xzoom({zoomWidth: 361, zoomHeight:361, title: true, tint: '#333', Xoffset: 15});
+            
+            });
+        })(jQuery);
+    </script>
+
+    <script>
+        function addToCart(ProductId){
+            console.log("addtocart")
+         $.ajax({
+
+            url:`/addtocart/`+ProductId,
+            method:'post',
+            success: (response) => {
+			  if (response.status==true) {
+				Swal.fire({
+				  title: 'Your Product has been added to Cart',
+				  icon: 'success',
+                  iconColor:'#FC54AD',
+				  timer: 5000
+				})
+            }else if(response.status=='outOfStock'){
+				Swal.fire({
+				  title: 'Product out of Stock',
+				  icon: 'error',
+				  timer: 5000
+				})
+            }else if(response.status=='blocked'){
+				Swal.fire({
+				  title: 'You are blocked',
+				  icon: 'error',
+				  timer: 5000
+				})
+				setTimeout(() => {
+					window.location.href="/logout"
+				},5000)
+            }
+        }
+         })
+
+        }
+
+</script>
+
+<script>
+
+        function addToWishlist(productId){
+         console.log("addtowish ajx")
+    $.ajax({
+      url: `/addwishlist?productId= ${productId}`,
+      method: 'post',
+      success: (response) => {
+          const wishlistButton = document.getElementById(`wishlistButton_${productId}`);
+          // const wishlistCount = response.wishlistLength
+          //   updateWishlistCountInDOM(wishlistCount);
+          if(response.status == 'blocked'){
+            Swal.fire({
+				  title: 'You are blocked',
+				  icon: 'error',
+				  timer: 5000
+				})
+				setTimeout(() => {
+					window.location.href="/logout"
+				},5000)
+
+          }
+          // if (response.status) {
+            
+          //   wishlistButton.classList.remove('action-btn', 'hover-up');
+          //   wishlistButton.style.backgroundColor='#088178';
+          //   wishlistButton.style.border='1px solid transparent';
+          //   wishlistButton.style.color='white';
+
+          //     Swal.fire({
+          //         title: "Successfull!",
+          //         text: `Product added to wishlist`,
+          //         icon: "success",
+          //         button: "Ok!",
+          //     })
+          // } 
+          else  if (response.status) {
+            
+            wishlistButton.classList.remove('action-btn', 'hover-up');
+            wishlistButton.style.backgroundColor='#088178';
+            wishlistButton.style.border='1px solid transparent';
+            wishlistButton.style.color='white';
+
+              Swal.fire({
+                  title: "Successfull!",
+                  text: `Product added to wishlist`,
+                  icon: "success",
+                  button: "Ok!",
+              })
+          } else{
+            wishlistButton.style = ''; // Remove inline styles
+            wishlistButton.classList.add('action-btn', 'hover-up');
+            Toastify({
+              text: 'Product removed from wishlist. ',
+              duration: 3000,
+              backgroundColor: '#ffa500', 
+              gravity: 'top', // Display the toast at the top of the screen
+              position: 'center', // Center the toast horizontally
+              stopOnFocus: true,
+            }).showToast();
+          }
+        
+      
+      },
+      error: ( error) => {
+        // Handle AJAX request error, if any
+        console.log('AJAX request error:', error);
+        window.location.href='/login'
+      
+      }
+    
+  })
+}
+        
+
+    </script>
+
+
+    <%- include('../public/includes/footer.ejs') %>
+
+
+
+
+
+    

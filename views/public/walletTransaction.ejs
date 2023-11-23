@@ -1,0 +1,53 @@
+<%- include('../public/includes/header.ejs') %>
+
+<div class="col-lg-8">
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4>My Wallet</h4>
+            <section class="bg-light py-3">
+                <div class="container">
+                    <h5>Your Wallet Balance: ₹ <%= user.wallet %>
+                    </h5>
+                </div>
+            </section>
+            <br>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                           
+                            <th>Amount</th>
+                            <th>Transaction type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% wallet.forEach(function(wallet,index) {%>
+                            <tr>
+                                <td>
+                                    <%=index+1%>
+                                </td>
+                               
+                                <td>
+                                    ₹ <%=wallet.walletTransaction.amount%>
+                                </td>
+                                <td>
+                                    <%if(wallet.walletTransaction.type=="Credit"){%>
+                                        <%=wallet.walletTransaction.type%>
+                                    <%}else{%>
+                                        <%=wallet.walletTransaction.type%>
+                                    <%}%>
+                                </td>
+                            </tr>
+                            <% }) %>
+        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</section>
+<%- include('../public/includes/footer.ejs')%>

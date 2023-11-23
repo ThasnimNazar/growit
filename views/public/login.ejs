@@ -1,0 +1,42 @@
+<%- include('../public/includes/header.ejs') %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="userAssets/css/loginstyle.css" type="text/css">
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <!-- Tabs Titles -->
+          <h2 class="active"> Sign In </h2>
+          <!-- <h2 class="inactive underlineHover">Sign Up </h2> -->
+      
+          <!-- Icon -->
+          <!-- <span style="color: green;"><%=(typeof message!=='undefined')?message:""%></span> -->
+          <%
+          if(typeof message !=='undefined'){
+               %>
+             <p style="color: green;"><%=message%></p>
+             <%
+             }
+             %>
+      
+          <!-- Login Form -->
+          <form action="/loginvalidation" method="POST">
+            <input type="text" id="login" class="fadeIn second" name="email" placeholder="login">
+            <input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
+            <input type="submit" class="fadeIn fourth"  value="Log In">
+          </form>
+      
+          <!-- Remind Passowrd -->
+          <div id="formFooter">
+            <a class="underlineHover" href="/loadforget">Forgot Password?</a>
+          </div>
+      
+        </div>
+      </div>
+<%- include('../public/includes/footer.ejs') %>

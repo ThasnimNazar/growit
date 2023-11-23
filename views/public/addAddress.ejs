@@ -1,0 +1,371 @@
+<%- include('../public/includes/header.ejs') %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="userAssets/css/addAddress.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+</head>
+
+
+
+<section style="background-color: white">
+    <div class="container py-5">
+      <div class="row">
+        <!-- <div class="col">
+          <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4"> -->
+            <!-- <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">User</a></li>
+              <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+            </ol> -->
+          <!-- </nav>
+        </div> -->
+      </div>
+    <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4" style="border-color: rgb(64, 110, 37);;">
+            <div class="card-body text-center">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px;">
+              <h5 class="my-3"><%= user.name %></h5>
+             
+              <p class="text-muted mb-1"><%= user.email %></p>
+              <p class="text-muted mb-4"><%= user.mobileno %></p>
+
+              <div class="d-flex justify-content-center mb-2">
+                <a href="/profile">
+                <!-- <button type="button" class="btn btn-primary">Follow</button> -->
+                <button type="button" class="btn btn-outline-success ms-1">Profile</button>
+              </a>
+              </div>
+
+              <div class="d-flex justify-content-center mb-2">
+                <a href="/orderPage">
+                <button type="button" class=" btn btn-outline-success ms-1">Orders</button>
+              </a>
+              </div>
+
+              <div class="d-flex justify-content-center mb-2">
+                <a href="/Address">
+                 <button type="button" class=" btn btn-outline-success ms-1">Address</button>
+              </a>
+              </div>
+
+            </div>
+         </div>
+        </div>
+      
+<div class="col-lg-8">
+    <div class="address">
+            <h3 style="text-align: center">Add Your Address.</h3>
+            <%
+            if(typeof message !=='undefined'){
+                 %>
+               <p style="color: green;"><%=message%></p>
+               <%
+               }
+               %>
+        
+            <hr />
+          
+        <form class="form" action="/submitAddress" id="myForm" method="POST">
+              
+            <div class="fields fields--2">
+              <label class="field">
+                <span class="field__label" for="firstname" name="name">name</span>
+                <input class="field__input" type="text" id="name" name="name">
+              </label>
+              <label class="field">
+                <span class="field__label" for="mobile no" name="mno">Mobile no</span>
+                <input class="field__input" type="text" id="mobileno" name="mobileno">
+              </label>
+            </div>
+            <label class="field">
+              <span class="field__label" for="address" name="address">Address</span>
+              <input class="field__input" type="text" id="address" name="address">
+            </label>
+
+            <label class="field">
+                <span class="field__label" for="locality" name="locality">locality</span>
+                <input class="field__input" type="text" id="locality" name="locality">
+              </label>
+
+            <!-- <label class="field">
+              <span class="field__label" for="locality" name="locality">locality</span>
+              <select class="field__input" id="country">
+                <option value=""></option>
+                <option value="unitedstates">United States</option>
+              </select>
+            </label> -->
+            <div class="fields fields--3">
+              <label class="field">
+                <span class="field__label" for="city" name="city">city</span>
+                <input class="field__input" type="text" id="city" name="city">
+              </label>
+              <label class="field">
+                <span class="field__label" for="pincode" name="pincode">pincode</span>
+                <input class="field__input" type="text" id="pincode" name="pincode">
+              </label>
+              <label class="field">
+                <span class="field__label" for="state" name="state">State</span>
+                <input class="field__input" type="text" id="state" name="state">
+              </label>
+            </div>
+            <!-- <button type="submit" class="button" style="margin-bottom: 100px; background-color: rgb(64, 110, 37);">Add</button> -->
+            <button type="submit" class="btn" style="background-color: deeppink;">Add Address</button>
+           
+            <hr>
+          <!-- </div> -->
+          
+        </form>
+    </div>
+   </div>
+</section>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+
+<script>
+     const form = document.getElementById('myForm');
+
+// Add a submit event listener to the form
+form.addEventListener('submit', async function (event) {
+  event.preventDefault(); // Prevent the form from actually submitting
+//   console.log('Name:');
+  // Get the values from the input fields
+const addressData={ 
+name :document.getElementById('name').value,
+mobileno : document.getElementById('mobileno').value,
+ address : document.getElementById('address').value,
+ locality : document.getElementById('locality').value,
+ city : document.getElementById('city').value,
+ pincode : document.getElementById('pincode').value,
+ state : document.getElementById('state').value
+}
+
+if (!isValidName(addressData.name) ||
+      !isValidMobileNo(addressData.mobileno) ||
+      !isValidAddress(addressData.address) ||
+      !isValidLocality(addressData.locality) ||
+      !isValidCity(addressData.city) ||
+      !isValidPincode(addressData.pincode) ||
+      !isValidState(addressData.state)) {
+    return; // If any validation fails, exit the function and don't submit the form
+  }
+  // You can now use these values as needed, for example, send them to a server or display them
+//   console.log('Name:', addressData);
+
+  try {
+    console.log('Name:', addressData);
+        const response = await fetch('/submitAddress', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(addressData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') { 
+            Toastify({
+                text: data.msg,
+                className: "info",
+                style: {
+                  background: "linear-gradient(to right, #00b09b, #96c93d)",
+                }
+            }).showToast();
+            // const addressModal = document.getElementById("addressModal");
+            // const modal = bootstrap.Modal.getInstance(addressModal);
+            // modal.hide()
+            setTimeout(()=>{
+                        location.reload()
+                    },1000)
+        } else {
+            Toastify({
+                text: data.msg,
+                className: "info",
+                style: {
+                    background: "linear-gradient(to right, #ff0000, #dd2a7f)",
+                }
+                }).showToast();
+        }    
+    }
+    catch (error) {
+        Toastify({
+            text: error.message,
+            className: "info",
+            style: {
+                background: "linear-gradient(to right, #ff0000, #dd2a7f)",
+            }
+            }).showToast();
+    }
+  
+});
+
+function isValidName(name) {
+
+    if (typeof name !== 'string') {
+    showToast('Name should be a valid string');
+    return false;
+  }
+  // Implement your name validation logic here
+  if (!name || name.trim() === '') {
+    // Display an error message for the user (e.g., using Toastify)
+    showToast('Please enter a valid name');
+    return false;
+  }
+  return true;
+}
+
+
+function isValidMobileNo(mobileno) {
+  // Implement your mobile number validation logic here
+  mobileno = mobileno.trim();
+  if (!/^\d{10}$/.test(mobileno)) {
+    showToast('Please enter a valid 10-digit mobile number');
+    return false;
+  }
+  return true;
+}
+
+function isValidAddress(address) {
+
+    if (typeof address !== 'string') {
+    showToast('Name should be a valid string');
+    return false;
+  }
+  // Implement your name validation logic here
+  if (!address || address.trim() === '') {
+    // Display an error message for the user (e.g., using Toastify)
+    showToast('Please enter a valid address');
+    return false;
+  }
+  return true;
+}
+
+function isValidLocality(locality) {
+
+    if (typeof locality !== 'string') {
+    showToast('Name should be a valid string');
+    return false;
+  }
+  // Implement your name validation logic here
+  if (!locality || locality.trim() === '') {
+    // Display an error message for the user (e.g., using Toastify)
+    showToast('Please enter a valid locality');
+    return false;
+  }
+  return true;
+}
+
+function isValidCity(city) {
+
+    if (typeof city !== 'string') {
+    showToast('Name should be a valid string');
+    return false;
+  }
+  // Implement your name validation logic here
+  if (!city || city.trim() === '') {
+    // Display an error message for the user (e.g., using Toastify)
+    showToast('Please enter a valid city name');
+    return false;
+  }
+  return true;
+}
+
+
+
+function isValidPincode(pincode) {
+  // Implement your name validation logic here
+  var pincodePattern = /^\d{6}$/;
+
+ if (!pincode || !pincode.match(pincodePattern)) {
+    // Display an error message for the user (e.g., using Toastify)
+    showToast('Please enter a valid 6-digit PIN code');
+    return false;
+  }
+  return true;
+}
+
+
+function isValidState(state) {
+
+    if (typeof state !== 'string') {
+    showToast('state should be a valid string');
+    return false;
+  }
+  // Implement your name validation logic here
+  if (!state || state.trim() === '') {
+    // Display an error message for the user (e.g., using Toastify)
+    showToast('Please enter a valid state');
+    return false;
+  }
+  return true;
+}
+
+function showToast(message) {
+  Toastify({
+    text: message,
+    className: 'info',
+    style: {
+      background: 'linear-gradient(to right, #ff0000, #dd2a7f)',
+    }
+  }).showToast();
+}
+    // try {
+    //     const response = await fetch('/submitAddress', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(addressData)
+    //     });
+        
+    //     const data = await response.json();
+        
+    //     if (data.status === 'success') { 
+    //         Toastify({
+    //             text: data.msg,
+    //             className: "info",
+    //             style: {
+    //               background: "linear-gradient(to right, #00b09b, #96c93d)",
+    //             }
+    //         }).showToast();
+    //         // const addressModal = document.getElementById("addressModal");
+    //         // const modal = bootstrap.Modal.getInstance(addressModal);
+    //         // modal.hide()
+    //         setTimeout(()=>{
+    //                     location.reload()
+    //                 },1000)
+    //     } else {
+    //         Toastify({
+    //             text: data.msg,
+    //             className: "info",
+    //             style: {
+    //                 background: "linear-gradient(to right, #ff0000, #dd2a7f)",
+    //             }
+    //             }).showToast();
+    //     }    
+    // }
+    // catch (error) {
+    //     Toastify({
+    //         text: error.message,
+    //         className: "info",
+    //         style: {
+    //             background: "linear-gradient(to right, #ff0000, #dd2a7f)",
+    //         }
+    //         }).showToast();
+    // }
+// });
+
+</script>
+
+
+ <%- include('../public/includes/footer.ejs') %>         

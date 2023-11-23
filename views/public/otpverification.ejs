@@ -1,0 +1,55 @@
+<%- include('./includes/header.ejs') %>
+
+
+                
+                    
+      
+        
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="userAssets/css/loginstyle.css" type="text/css">
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <!-- Tabs Titles -->
+          <h2 class="active"> Otp verification</h2>
+         
+      
+          <!-- Icon -->
+          <!-- <div class="fadeIn first">
+            <img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" />
+          </div> -->
+          <span style="color: red;"><%=(typeof message!=='undefined')?message:""%></span>
+
+          <!-- <div id="countdown" class="text-danger"></div> -->
+
+        
+
+
+          <!-- Login Form -->
+          <form action="/verifyOtp" method="POST">
+            <input type="text" id="otp" class="fadeIn second" name="otp" placeholder="otp">
+          <input type="text" value="<%= mobileno %>" id="mobileno" name="mobileno" readonly>
+            <input type="submit" class="fadeIn fourth"  value="Verify">
+          </form>
+      
+         
+      
+        </div>
+      </div>
+
+    
+
+
+
+      
+     
+
+
+<%- include('./includes/footer.ejs') %>

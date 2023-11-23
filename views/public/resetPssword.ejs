@@ -1,0 +1,38 @@
+<%- include('../public/includes/header.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="userAssets/css/loginstyle.css" type="text/css">
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <!-- Tabs Titles -->
+          <h2 class="active"> Reset Password</h2>
+          <!-- <h2 class="inactive underlineHover">Sign Up </h2> -->
+      
+          <!-- Icon -->
+          <!-- <div class="fadeIn first">
+            <img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" />
+          </div> -->
+      
+          <!-- Login Form -->
+          <form action="/resetPassword" method="POST">
+            <input type="password"  class="fadeIn second" name="newPassword" placeholder="reset password">
+            <input type="password"  class="fadeIn third" name="confirmPassword" placeholder="confrim password">
+            <input type="submit" class="fadeIn fourth"  value="Reset">
+          </form>
+      
+          <!-- Remind Passowrd -->
+          <!-- <div id="formFooter">
+            <a class="underlineHover" href="/loadforget">Forgot Password?</a>
+          </div> -->
+      
+        </div>
+      </div>
+<!-- </body>
+</html> -->
+<%- include('../public/includes/footer.ejs') %>
