@@ -1,7 +1,7 @@
 require('dotenv').config()
 const mongoose=require('mongoose')
 
-mongoose.connect("mongodb://127.0.0.1:27017/user_managment-system")
+mongoose.connect("mongodb+srv://Thasnim:lg2atUSE9qx8NlUS@cluster0.ixyvumc.mongodb.net/")
 const session = require("express-session");
 const MongoDBSession = require("connect-mongodb-session")(session);
 const express = require('express')
@@ -11,7 +11,8 @@ const nocache=require('nocache')
 app.use(express.json())
 
 
-const mongoURI = "mongodb://127.0.0.1:27017/user_managment-system"
+const mongoURI = "mongodb+srv://Thasnim:lg2atUSE9qx8NlUS@cluster0.ixyvumc.mongodb.net/";
+
 
 
 mongoose.connect(mongoURI, {

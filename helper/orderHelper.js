@@ -5,7 +5,7 @@ const Address = require('../models/addressmodel')
 const { Order } = require('../models/ordermodel')
 const mongoose = require('mongoose')
 const { ObjectId } = require('bson');
-const Razorpay = require('Razorpay')
+const Razorpay = require('razorpay')
 
 var instance = new Razorpay({
   key_id: process.env.RAZORPAY_ID,
