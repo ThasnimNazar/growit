@@ -61,42 +61,40 @@
                 <div class="row">
                 <%if(address[0]){%>
                     <div class="col-lg-8 col-md-6">
-                        <h6 class="coupon__code"><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click
-                        here</a> to enter your code</h6>
                         <h6 class="checkout__title">Billing Details</h6>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Name<span>*</span></p>
-                                    <input type="text"  class="form-control" id="first" name="name" value="<%=address[0].name%>">
+                                    <input type="text"  class="form-control" style="border-color: black;" id="first" name="name" value="<%=address[0].name%>">
                                 </div>
                             </div>
                         </div>
                         <div class="checkout__input">
                             <p>Mobile no<span>*</span></p>
-                            <input type="text" class="form-control" id="mobile" name="name" value="<%=address[0].mobileNumber%>">
+                            <input type="text" class="form-control" style="border-color: black;" id="mobile" name="name" value="<%=address[0].mobileNumber%>">
                         </div>
                         <div class="checkout__input">
                             <p >Address<span>*</span></p>
-                            <input type="text" placeholder="Street Address" class="checkout__input__add" id="add1" name="address" value="<%=address[0].address%>">
+                            <input type="text" placeholder="Street Address" class="checkout__input__add" style="border-color: black;" id="add1" name="address" value="<%=address[0].address%>">
                         </div>
                         <div class="checkout__input">
                             <p>locality<span>*</span></p>
-                            <input type="text"  id="add2" name="locality" value="<%=address[0].locality%>" >
+                            <input type="text"  id="add2" name="locality" style="border-color: black;" value="<%=address[0].locality%>" >
                         </div>
                         <div class="checkout__input">
                             <p style>City<span>*</span></p>
-                            <input type="text"  id="add3" name="city" value="<%=address[0].city%>" >
+                            <input type="text"  id="add3" name="city" style="border-color: black;" value="<%=address[0].city%>" >
                         </div>
                         <div class="checkout__input">
                             <p >Pincode<span>*</span></p>
-                            <input type="text"  id="add4" name="pincode" value="<%=address[0].pincode%>" >
+                            <input type="text"  id="add4" name="pincode" style="border-color: black;" value="<%=address[0].pincode%>" >
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p >State<span>*</span></p>
-                                    <input type="text"  id="add5" name="state" value="<%=address[0].state%>" >
+                                    <input type="text"  id="add5" style="border-color: black;" name="state" value="<%=address[0].state%>" >
                                 </div>
                             </div>
                         </div>
@@ -106,13 +104,13 @@
                     <div class="col-lg-4 col-md-6">
                        
                         <div class="form-container p-t-75">
-                            <div class="card" class="card" style="margin-top: 200px; background-color:  rgb(247, 238, 241); border-radius: 10px;">
+                            <div class="card" class="card" style=" background-color:  rgb(247, 238, 241); border-radius: 2px; margin-bottom: 100px;">
                                 <div class="card-body">
                                     <form id="checkOut-form">
                                         <div class="order_box">
                                             <h2 class="card-title">Your Order</h2>
                                             <ul class="list-group list-group-flush">
-                                                <li class="list-group-item" style="background-color: black; color: white"><h5>Product Total</h5></li>
+                                                <li class="list-group-item" style=" color: white; border-radius: 5px;"><h5>Product Total</h5></li>
                                                 <% cart.forEach(function(cart,index) {%>
                                                 <li class="list-group-item">
                                                     <a href="#" style="color: black;"><%=cart.carted.name%> 
@@ -123,19 +121,17 @@
                                             </ul>   
                                             <ul class="list list_2">
                                                 <li><a href="#" class="sub" style="color:black">Subtotal <span id="subTotal">₹<%=total.cartTotal%></span></a></li>
-                                               
                                                 <li class="p-t-10"><b>Total: <span id="total"></span></b></li>
-                                                <input type="hidden" name="total" value="<%=total.cartTotal%>" id="totalVal" >
                                                 <%if(address[0]){%>
                                                 <input type="hidden" name="address" id="address" value="<%=address[0]._id%>" >
                                                 <%}else{%>
                                                 <%}%>
                                             </ul> 
                                             <div class="form-group row coupon_area p-t-15">
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-8">
                                                     <% if(couponList && couponList.length> 0) { %>
-                                                        <select class="form-control" name="couponCode" id="couponCode">
-                                                            <option value="" disabled selected>Enter coupon code...</option>
+                                                        <select class="form-control" name="couponCode" id="couponCode" >
+                                                            <option value="" disabled selected>select coupon code</option>
                                                             <% couponList.forEach(function(coupon) { %>
                                                                 <option value="<%= coupon.couponCode %>">
                                                                     <%= coupon.couponCode %>
@@ -148,12 +144,12 @@
                                                             <% } %>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <button class="flex-c-m stext-101 cl2 size-15 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer"
-                                                        style="width: 100%; height: 40px;" onclick="applyCoupon('<%=total.cartTotal%>')">Apply</button>
+                                                    <button class="hov-btn3"
+                                                        style="width: 100%; height: 40px; border-radius: 5px; background-color: white; border-color:cornsilk; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" onclick="applyCoupon('<%=total.cartTotal%>')">Apply</button>
                                                 </div>
-                                                <div class="col-sm-3">
-                                                    <button class="flex-c-m stext-101 cl2 size-15 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer"
-                                                        style="width: 100%; height: 40px;" onclick="removeCoupon()">Remove</button>
+                                                <div class="">
+                                                    <button class="hov-btn3 "
+                                                        style="width: 100%; height: 40px; margin-top: 20px; border-radius: 5px; background-color: white; border-color:cornsilk; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" onclick="removeCoupon()">Remove</button>
                                                 </div>
                                             </div>
                                             <span id="couponErr"></span>                        

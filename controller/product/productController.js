@@ -31,6 +31,8 @@ const createProduct = async (req, res) => {
   }
 }
 
+
+
 const saveProduct = async(req, res, next) => {
   try {
     const categories = await categorymodel.find({})
@@ -66,93 +68,6 @@ const saveProduct = async(req, res, next) => {
 
 
 
-
-
-
-
-
-
-
-
-
-// const saveProduct = async (req, res) => {
-//   try {
-//     console.log("save product here ", req.files , req.body)
-//     if (!req.files || req.files.length === 0) {
-//       console.log("11 ")
-//       return res.status(500).send("no images here")
-//     }
-//     const images = []
-//     for (let i = 0; i < req.files.length; i++) {
-//       console.log(req.files[i].filename)
-//       images.push(req.files[i].filename)
-//     }
-
-
-//     const { productName, productDescription, price, category, stock } = req.body;
-//     //image upload using multer
-//     console.log("enter to save")
-//     const savedProduct = await productHelper.saveProducts(productName, productDescription, price, images, category, stock)
-//     console.log("product addded")
-//     res.status(200).json({ status: 'success', msg: 'product created successfully', data: savedProduct })
-//     console.log("33")
-//   }
-//   catch (err) {
-//     console.log("err")
-//     res.status(500).json({ status: 'error', msg: err.message })
-//   }
-// }
-
-
-//   const updateProduct=async(req,res)=>{
-//       try{
-//         const productId = req.body.id;
-//         console.log(productId)
-//        const productData = await Product.findById(productId);
-
-//        console.log(req.body,"123456789");
-//       const categories = await categorymodel.find({})
-
-//       if (typeof req.body.name !== 'string' || req.body.name.trim().length === 0) {
-//         console.log(productData,"1");
-
-//         if (!productData) {
-//           return res.status(404).send("Product not found");
-//         }
-
-//         return res.render("updateproducts", { message: "Name is required",product:productData,category:categories });
-//     }
-//     if (!req.body.description || req.body.description.trim().length === 0) {
-//       console.log("2");
-//       return res.render("updateproducts", { message: "Description is required",product:productData,category:categories });
-//   }
-//     if(req.body.price<=0){
-//       console.log("3");
-//       return res.render("updateproducts", { message: "Product Price Should be greater than 0",product:productData,category:categories });
-//     }
-//     if(req.body.stock<0 || req.body.stock.trim().length === 0 ){
-//       console.log("4");
-//       return res.render("updateproducts", { message: "Stock Should be greater than 0",product:productData,category:categories });
-//     }
-
-//     if(!req.files||req.files.length===0){
-//       console.log("5");
-//       return res.status(500).send("no images")
-//     }
-//     const image = []
-//     for(let i=0;i<req.files.length;i++){
-//       image.push(req.files[i].filename)
-//     }
-
-//     const updatedImages = image.length > 0 ? image : productData.image;
-//     await productHelper.updateProduct(req.body,updatedImages)
-//     res.redirect('/admin/products')
-//   }
-
-//     catch(error){
-//       console.log (error.message)
-//       }
-//     }
 
 const updateProduct = async (req, res) => {
   try {

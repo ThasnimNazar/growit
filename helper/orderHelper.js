@@ -392,6 +392,8 @@ const verifyPayment =  async(details) => {
   }
 }
 
+
+
 const changePaymentStatus =  (userId, orderId,razorpayId) => {
   try {
     return new Promise(async (resolve, reject) => {
@@ -417,10 +419,6 @@ const changePaymentStatus =  (userId, orderId,razorpayId) => {
 
 
  
-
-
-
-
 
 
 

@@ -390,51 +390,44 @@ const verifyLogin = async (req, res) => {
 
 const loadHome = async (req, res) => {
     try {
-        // console.log("home11")
-        // res.render('index')
-        // await categoryProduct(req,res);
-        // const category=await categoryhelper.getCategory()
-            
+       
+        const products = await Product.find({ $and: [{ isListed: true }, { isProductListed: true }]}).populate('category')
                 console.log(req.session,"session")
                 const category=await Category.find({})
                 const banner = await Banner.find({})
-                res.render('index',{category,banner})
+                const page = parseInt(req.query.page) || 1; 
+                const limit = 8;
+                const searchQuery = req.query.search || '';
+                const skip = (page - 1) * limit;
+
+                
+
+                const filterCriteria = {
+                    $and: [
+                      { isListed: true },
+                      { isProductListed: true },
+                      {
+                        $or: [
+                          { name: { $regex: new RegExp(searchQuery, 'i') } },
+                        ]
+                      }] };
+
+                 const totalProducts = await Product.countDocuments(filterCriteria);
+            
+                const totalPages = Math.ceil(totalProducts / limit);
+
+                const product = await Product.find(filterCriteria)
+        .populate('category')
+        .skip(skip) 
+        .limit(limit) 
+
+                res.render('index',{category,banner,product,totalPages,skip,limit,currentPage: page})
     }  
             catch(error){
                 console.log(error.message)
             }  
         }
 
-
-
-
-         
-
-
-     
-        
-
-        
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-        
 
 
 

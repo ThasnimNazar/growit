@@ -5,8 +5,6 @@
 
 
 
-
-
  
  const resetPassword=async (mobileno, password) => {
     console.log("in reset pass");
@@ -27,5 +25,4 @@
     })
 }
 
-
-module.exports={resetPassword}
+module.exports={resetPassword}     
