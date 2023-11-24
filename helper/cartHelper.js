@@ -21,7 +21,6 @@ const addCart = async (productId, userId) => {
                 {$match: {'cartItems.productId':new ObjectId(productId)}},
                 {$project: {'cartItems.quantity': 1}}
             ])
-            console.log(product,productObj,quantity,"addcrt");
             Cart.findOne({user: userId}).then(async(cart) => {
                 if(cart){
                     const productExist = await Cart.findOne({user: userId, "cartItems.productId": productId})
@@ -151,11 +150,8 @@ const updateQuantity = async(data) => {
 
 const deleteproducts = async (data) => {
     const cartId = data.cartId
-    console.log(cartId)
     const proId = data.proId
-    console.log(proId)
     const product = await Product.findOne({_id: proId})
-    console.log(product)
     const cart = await Cart.findOne({_id: cartId, "cartItems.productId": data.proId})
     return new Promise((resolve, reject) => {
         try {

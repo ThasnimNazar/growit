@@ -48,11 +48,9 @@ const changePrimary = async (req, res, next) => {
 
 const Payment = async (req, res, next) => {
   try {
-    console.log("payment post");
         const userId = res.locals.user._id;
         const data = req.body;
-        console.log(data,"data");
-        await couponHelper.addCouponToUser(data.couponCode, userId);
+        // await couponHelper.addCouponToUser(data.couponCode, userId);
 
         const checkStock = await orderHelper.checkStock(userId);
         if (!checkStock) {
@@ -66,7 +64,6 @@ const Payment = async (req, res, next) => {
          // If payment option is wallet + razorpay
         if (data.payment_option === "wallet_razorpay") {
           if (walletAmount >= data.total) {
-          console.log("waallet1a")
         // Handle the case when the wallet has enough or more than enough balance
         //     userData.wallet -= data.total; // Deduct the total amount from the wallet
         //     console.log("userData 1a", userData.wallet)
@@ -91,7 +88,7 @@ const Payment = async (req, res, next) => {
 
     } else {
         // Handle the case when the wallet doesn't have enough balance and the rest will be handled by Razorpay
-        console.log("waallet 2a")
+        
         const remainingAmount = data.finalAmount;
 
         await orderHelper.placeOrder(data, userId);
@@ -101,7 +98,6 @@ const Payment = async (req, res, next) => {
 } else {
             // ... rest of your code
           if (data.payment_option === "cod" || data.payment_option === "wallet") {
-            console.log("payment cod");
             await orderHelper.updateStock(userId);
             await orderHelper.placeOrder(data, userId);
             await Cart.deleteOne({ user: userId });
@@ -113,10 +109,8 @@ const Payment = async (req, res, next) => {
 
             return res.json({ orderStatus: true, message: "order placed successfully" });
           } else if (data.payment_option === "razorpay") {
-            console.log("payment:razor");
               await orderHelper.placeOrder(data, userId);
             const order = await orderHelper.generateRazorpay(userId, data.total);
-            console.log(order,"ordedrrzr");
               return res.json(order);
           }
         }

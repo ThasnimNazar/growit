@@ -31,9 +31,10 @@ const checkStock = async(userId)=>{
 
 
 const placeOrder = (data, user) => {
+
   return new Promise(async (resolve, reject) => {
       try {
-       
+       console.log("placeOrder",data)
           const productDetails = await Cart.aggregate([
             {
                 $match: {
@@ -86,14 +87,11 @@ const placeOrder = (data, user) => {
                 $project: { item: "$address" },
               },
           ]);
-          console.log(user,addressData,"placeorder");
           let status, orderStatus;
 
           const userData = await User.findById({ _id: user });
           if (data.payment_option === "wallet_razorpay") {
             if (userData.wallet >= data.total) {
-              console.log("wallet 1 b")
-              console.log("waallet 1b ", userData.wallet, data.total)
                   // Deduct the total amount from the wallet
                   userData.wallet -= data.total;
                   await userData.save()
@@ -111,8 +109,6 @@ const placeOrder = (data, user) => {
 
                   (status = "Success"), (orderStatus = "Placed");
             } else {
-              console.log("waallet 2b")
-               console.log("waallet 2b ", userData.wallet, data.total)
                   // Deduct the entire wallet amount
                   const deductedWalletAmount = userData.wallet;
                   userData.wallet = 0;
@@ -156,7 +152,6 @@ const placeOrder = (data, user) => {
               }
 
           } else {
-            console.log("payment pending");
               // Assuming other options will default to Razorpay
               (status = "Pending"), (orderStatus = "Pending");
           }
@@ -177,9 +172,7 @@ const placeOrder = (data, user) => {
               
               createdAt:new Date()
           }
-          console.log(orderData,"placeorder");
           const order = await Order.findOne({ user: user });
-          console.log(userData,"placeorder");
 
           if (order) {
               await Order.updateOne(
@@ -220,7 +213,6 @@ const placeOrder = (data, user) => {
 
 
 const updateStock = async(userId,codStatus,status)=>{
-    console.log('enter')
     const products = await Cart.findOne({user:userId})
    
     const cartProducts = products.cartItems
@@ -293,7 +285,6 @@ const getOrderList = (page, limit) => {
       ])
         .then((totalOrders) => {
           const count = totalOrders.length > 0 ? totalOrders[0].count : 0;
-          console.log(count,'ghdsc')
           const totalPages = Math.ceil(count / limit);
           const skip = (page - 1) * limit;
   
@@ -304,7 +295,6 @@ const getOrderList = (page, limit) => {
             { $limit: limit },
           ])
             .then((orders) => {
-              console.log(orders)
               resolve({ orders, totalPages, page, limit });
             })
             .catch((error) => reject(error));
@@ -348,7 +338,6 @@ const generateRazorpay = (userId, total)=> {
         currency: "INR",
         receipt: "" + orderId,
       };
-      console.log("Amount sent to Razorpay:", options.amount)
       instance.orders.create(options, function (err, order) {
         if (err) {
           console.log(err);
@@ -357,10 +346,8 @@ const generateRazorpay = (userId, total)=> {
           resolve(order);
         }
       });
-      console.log("resolve");
     });
   } catch (err) { 
-    console.log("error");
     console.log(err.message);
   }
 }

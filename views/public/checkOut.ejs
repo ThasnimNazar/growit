@@ -121,7 +121,8 @@
                                             </ul>   
                                             <ul class="list list_2">
                                                 <li><a href="#" class="sub" style="color:black">Subtotal <span id="subTotal">₹<%=total.cartTotal%></span></a></li>
-                                                <li class="p-t-10"><b>Total: <span id="total"></span></b></li>
+                                                <li class="p-t-10"><b>total<span id="total"></span></b></li>
+                                                <input type="hidden" name="total" value="<%=total.cartTotal%>" id="totalVal" >
                                                 <%if(address[0]){%>
                                                 <input type="hidden" name="address" id="address" value="<%=address[0]._id%>" >
                                                 <%}else{%>
@@ -306,13 +307,13 @@ if (hiddenInputElement1) {
     console.log("Hidden input field with id 'address' not found");
 }
 
-
+var selectedCouponCode = $("#couponCode").val();
 
 let checkoutData={
 address:addressValue,
 payment_option:selectedValue,
 total:totalValue,
-
+couponCode: selectedCouponCode,
 }
 // const arr = Object.entries(checkoutData).map(([key, value]) => ({ key, value }));
 const remainingPay = parseFloat(document.getElementById('remainingPay').innerText);

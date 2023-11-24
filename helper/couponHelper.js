@@ -1,5 +1,6 @@
 const Coupon=require('../models/coupon')
 const User=require('../models/userModel')
+const Order = require('../models/ordermodel')
 const Cart=require('../models/cartModel')
 const { ObjectId } = require('mongoose').Types;
 
@@ -62,8 +63,6 @@ const verifyCoupon = (userId, couponCode) => {
 
   const totalCheckOutAmount = (userId) => {
     try {
-      
-      console.log(userId,"uid tot")
       return new Promise(async(resolve, reject) => {
         const data = await Cart.aggregate([
           {
@@ -126,7 +125,6 @@ const verifyCoupon = (userId, couponCode) => {
             if (couponExist) {
               if (new Date(couponExist.validity) - new Date() > 0) {
                 if (total >= couponExist.minPurchase) {
-                  console.log(total,">",couponExist.minPurchase)
                   let discountAmount = (total * couponExist.minDiscountPercentage) / 100;
                   if (discountAmount > couponExist.maxDiscountValue) {
 
@@ -146,7 +144,6 @@ const verifyCoupon = (userId, couponCode) => {
                     });
                   }
                 } else {
-                  console.log(total,">",couponExist.minPurchase,"else")
                   resolve({
                     status: false,
                     message: `Minimum purchase amount is ${couponExist.minPurchase}`,
@@ -176,13 +173,16 @@ const verifyCoupon = (userId, couponCode) => {
 
   const addCouponToUser =  (couponCode, userId) => {
     try {
+      console.log("addCouponToUser",userId)
       return new Promise(async(resolve, reject) => {
-        const updated = await User.updateOne(
-            { _id: new ObjectId(userId) },
-            {$push: { coupons: couponCode}}
-          )
+        const orderLength = await Order.findOne({ user: userId }).select('orders').then(order => order.orders.length);
+
+        const updated = await Order.updateOne(
+          { user: userId },
+          { $set: { [`orders.${orderLength - 1}.couponCode`]: couponCode } }
+        )
           .then((couponAdded) => {
-            resolve(couponAdded);
+            resolve("couponAdded",couponAdded);
           });
         console.log(updated);
       });
