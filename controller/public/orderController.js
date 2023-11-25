@@ -64,23 +64,6 @@ const Payment = async (req, res, next) => {
          // If payment option is wallet + razorpay
         if (data.payment_option === "wallet_razorpay") {
           if (walletAmount >= data.total) {
-        // Handle the case when the wallet has enough or more than enough balance
-        //     userData.wallet -= data.total; // Deduct the total amount from the wallet
-        //     console.log("userData 1a", userData.wallet)
-        //     console.log("dataTotal 1a", data.total)
-        // await userData.save();
-
-        // const walletTransaction = {
-        //     date: new Date(),
-        //     type: "Debit",
-        //     amount: data.total,
-        // }
-  
-        // await User.updateOne(
-        //     { _id: userId },
-        //     { $push: { walletTransaction: walletTransaction } }
-        // );
-
         await orderHelper.updateStock(userId);
         await orderHelper.placeOrder(data, userId);
         await Cart.deleteOne({ user: userId });
@@ -281,12 +264,7 @@ const Invoice = async (req, res, next) => {
       "price": parseFloat(product.productPrice-discountUsed), 
       // "discount": parseFloat(discountUsed)
     }))
-    // const products = order.product.map((product) => ({
-    //   "quantity": parseInt(product.quantity),
-    //   "description": product.productName,
-    //   "tax-rate": 0,
-    //   "price": parseInt(product.productPrice)
-    // }))
+    
 
     var data = {
       customize: {},

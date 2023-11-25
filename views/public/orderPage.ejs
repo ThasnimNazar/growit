@@ -42,6 +42,8 @@
         background-color: white;
      } */
 
+   
+
  </style>
  
 
@@ -52,7 +54,7 @@
    <div class="container py-5">
      <div class="row">
        <div class="col-lg-8">
-         <div class="card " class="card" style="background-color: rgb(59, 102, 35); margin-left:100px ;">
+         <div class="card " class="card" style=" margin-left:100px ; width: 900px; border-color: rgb(1, 100, 1);">
            <div class="card-body">
              <h4>My Orders</h4>
              <br>
@@ -62,7 +64,7 @@
                          <div class="col-md-12">
                              <div class="dashboard-wrapper user-dashboard">
                                  <div class="table-responsive">
-                                     <table class="table" id="myTable">
+                                     <table class="table table-hover" id="myTable" >
                                          <thead>
                                              <tr>
                                                  <th>Order No</th>
@@ -79,9 +81,9 @@
                                          <tbody>
                                              <% orders.forEach((order, index) => { %>
                                                  <tr>
-                                                     <td class="td" style="color:rgb(235, 218, 224)"><%= index + 1 %></td>
-                                                     <td class="td1" style="color:rgb(235, 218, 224)"><%= order.orders.createdAt.toLocaleString() %></td>
-                                                     <td class="td2" style="color:rgb(235, 218, 224)">₹ <%= order.orders.totalPrice %></td>
+                                                     <td ><%= index + 1 %></td>
+                                                     <td ><%= order.orders.createdAt.toLocaleString() %></td>
+                                                     <td >₹ <%= order.orders.totalPrice %></td>
                                                      <td>
                                                          <% if (order.orders.orderStatus == 'Placed') { %>
                                                              <div class="badge rounded-pill alert-primary"><%= order.orders.orderStatus %></div>

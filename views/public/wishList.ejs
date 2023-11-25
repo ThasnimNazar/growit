@@ -11,13 +11,12 @@
   }
 </style>
 
-<h4>Wishlist</h4>
 
 <main class="main">
     <div class="page-header breadcrumb-wrap">
    
     <section class="mt-50 mb-50">
-        <div class="container">
+        <div class="container py-5">
             <div class="row">
               <div class="card" style="padding-bottom: 20px; border-color:rgb(255, 207, 215) ;">
                 <div class="col-12">
@@ -26,7 +25,6 @@
                                     <th scope="col">Product</th>
                                     <th scope="col">Product Name</th>
                                     <th scope="col">Price</th>
-                                    <th scope="col">Stock status</th>
                                     <th scope="col">Action</th>
                                     <th scope="col">Remove</th>
                                 </tr>
@@ -36,19 +34,11 @@
                                 <tr>
                                     <td class="image product-thumbnail"><img src="../public/product-images/create-images/<%=products[i].images[0]%>" alt="" style="width: 100px; height: 100px;"></td>
                                     <td class="product-des product-name">
-                                        <p class="name" style="color: black;"><a href=""><%=products[i].name%></a></p>
+                                        <p class="name" style="color: black;"><%=products[i].name%></a></p>
                                         <!-- <p class="font-xs text-truncate"></p> -->
                                     </td>
                                     <td class="price" data-title="Price"><span>₹<%=products[i].price%> </span></td>
-                                    <td class="text-center" data-title="Stock">
-
-                                        <% if(products[i].stock) { %>
-                                        <span class="color3 font-weight-bold">In Stock</span>
-                                       <% } else {%>
-                                         <span class="color3 font-weight-bold">Out Of Stock</span>
-                                        <% }  %>
-
-                                    </td>
+                                    
                                     <td class="text-right" data-title="Cart">
                                        
                                             <a class="btn btn-sm" onclick="addToCart('<%=products[i].item %>')"><i class="fas fa-shopping-cart"></i></a>
@@ -60,8 +50,10 @@
                                 <% } %>
                             </tbody>
                             
-                                <!-- <h5>Wishlist is empty</h5>
-                                <br> -->
+                            <% if(products.length===0) { %>
+                              <h5>Wishlist is empty</h5>
+                              <br>
+                              <% } %>
                                 
                         </table>
                 </div>

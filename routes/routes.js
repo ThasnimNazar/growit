@@ -54,12 +54,10 @@ router.post('/register',userController.insertUser)
 router.post('/verifyOtp',userController.verifyOtp) 
  
 
-
-
 //product
 router.get('/displayproducts',auth.isBlocked,userController.displayProduct)
-router.get('/productPage',productController.productpage)
-router.get('/categoryPage',auth.isBlocked,userController.categoryProduct)
+router.get('/productPage',auth.isBlocked,productController.productpage)
+router.get('/categoryPage',auth.isLogout,auth.isBlocked,userController.categoryProduct)
 
 //forgetpassword
 router.get('/loadforget',userController.loadForgotpassword)
@@ -68,47 +66,47 @@ router.post('/forgetOtp',userController.verifyforgetOtp)
 router.post('/resetPassword',userController.resetPassword)
 router.get('/wallet',userController.walletTransaction)
 
-router.get('/profile',profileController.profile)
-router.post('/editInfo',profileController.editInfo)
+router.get('/profile',  auth.isBlocked,profileController.profile)
+router.post('/editInfo',  auth.isBlocked,profileController.editInfo)
 
 
 
-router.get('/Address',profileController.loadAddress)
-router.get('/loadadd',profileController.loadaddAddress)
-router.post('/submitAddress',profileController.submitAddress)
+router.get('/Address',  auth.isBlocked,profileController.loadAddress)
+router.get('/loadadd',  auth.isBlocked,profileController.loadaddAddress)
+router.post('/submitAddress',  auth.isBlocked,profileController.submitAddress)
 // router.get('/addAddress',profileController.addAddress)
-router.get('/loadedit',profileController.loadEdit)
-router.post('/edit',profileController.editAddress)
-router.post('/deleteAddress',profileController.deleteAddress)
+router.get('/loadedit',  auth.isBlocked,profileController.loadEdit)
+router.post('/edit', auth.isBlocked,profileController.editAddress)
+router.post('/deleteAddress',auth.isBlocked,profileController.deleteAddress)
 
 
 
 router.post('/addtocart/:id',auth.cartBlocked,cartController.addToCart)
-router.get('/loadcart',cartController.loadCart)
+router.get('/loadcart',auth.isLogin, auth.isBlocked,cartController.loadCart)
 router.put('/change-product-quantity',cartController.updateQuantity)
 router.delete('/deleteCart',cartController.deleteProductController)
 
-router.get('/checkout',cartController.checkOut)
-router.get('/checkoutAddress',cartController.checkOutAddress)
+router.get('/checkout', auth.isBlocked,cartController.checkOut)
+router.get('/checkoutAddress', auth.isBlocked,cartController.checkOutAddress)
 
 
 
 router.post('/changeAddress',orderController.changePrimary)
-router.post('/payment',orderController.Payment)
-router.get('/success',orderController.orderSuccess)
+router.post('/payment',auth.isLogin, auth.isBlocked,orderController.Payment)
+router.get('/success',auth.isLogin, auth.isBlocked,orderController.orderSuccess)
 router.put('/cancelOrder',orderController.cancel)
 router.post('/verifyPayment', orderController.verifyPayment)
 
-router.get('/orderPage',orderController.orderPage)
-router.get('/orderdetail',orderController. orderDetails)
-router.get('/invoice',orderController.Invoice)
+router.get('/orderPage',auth.isLogin, auth.isBlocked,orderController.orderPage)
+router.get('/orderdetail',auth.isLogin, auth.isBlocked,orderController. orderDetails)
+router.get('/invoice',auth.isLogin, auth.isBlocked,orderController.Invoice)
 
-router.get('/applyCoupon/:id',userController.applyCoupon)
-router.get('/verifyCoupon/:id', userController.verifyCoupon)
+router.get('/applyCoupon/:id', auth.isBlocked,userController.applyCoupon)
+router.get('/verifyCoupon/:id', auth.isBlocked,userController.verifyCoupon)
    
-router.get('/getwishlist',userController.getWishlist)
-router.post('/addwishlist',auth.cartBlocked,userController.addtoWishlist)
-router.post('/deletewishlist',userController.deleteWishlist)
+router.get('/getwishlist',auth.isLogin, auth.isBlocked,userController.getWishlist)
+router.post('/addwishlist',auth.isLogin, auth.isBlocked,auth.cartBlocked,userController.addtoWishlist)
+router.post('/deletewishlist',auth.isLogin, auth.isBlocked,userController.deleteWishlist)
 
 router.get('/logout',userController.userLogout)  
 

@@ -103,53 +103,7 @@ const updateProduct = async (req, res) => {
     
 
 
-const displayProduct = async (req, res) => {
-  // //  try{
-  // //      const products = await Product.find({})
-  // //    res.render('productlist',{products:products})    
-  // //  }
-  // // catch(error){
-  // //  console.log(error.message)
-  // //   }
-  // // }
 
-    
-
-
-  // // const createProduct=async(req,res)=>{
-  // //     try{
-  // //       const categories=await categorymodel.find({});
-  // //       if(!req.body.name||req.body.name.trim().length===0)
-  // //       {
-  // //         res.render('addproducts',{message:"Name is required",category:categories})
-  // //       }
-  // //       if(!req.body.price||req.body.price<=0)
-  // //       {
-  // //         res.render('addproducts',{message:"price should be greater than 0"})
-  // //       }
-  // //       if(!req.body.description||req.body.description.trim().length===0)
-  // //       {
-  // //         res.render('addproducts',{message:"description is required",category:categories})
-  // //       }
-  // //       if(!req.body.category||req.body.category.trim().length===0)
-  // //       {
-  // //         res.render('addproducts',{message:"category is required",category:categories})
-  // //       }
-  // //       if(!req.body.stock||req.body.stock.trim().length===0)
-  // //       {
-  // //         res.render('addproducts',{message:"stock is required",category:categories})
-  // //       }
-  // //       const images=req.files.map((file)=>file.filename)
-
-  // //       await productHelper.addProduct(req.body,images)
-  // //         res.render("/admin/productlist") 
-
-  // //     }
-  // //     catch(error)
-  // //     {
-  // //         console.log(error.message)
-  // //     }
-}
 
 const unlistProduct = async (req, res) => {
   try {
@@ -215,9 +169,6 @@ const productpage = async (req, res) => {
     const id = req.query.id;
     console.log(id,'pp')
 
-    // const wishlist = await Wishlist.findOne({
-    //   userId: new ObjectId(res.locals.user._id),
-    // });
 
     const product = await Product.findById({ _id: id }).populate('category')
     if (product.isProductListed == true && product.isListed == true) {

@@ -685,27 +685,6 @@ const deleteOffer = async(req,res)=>{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
 module.exports={
     loadLogin,
     VerifyLogging,

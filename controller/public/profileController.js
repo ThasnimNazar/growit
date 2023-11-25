@@ -4,12 +4,12 @@ const profileHelper=require('../../helper/profileHelper')
 const Address=require('../../models/addressmodel')
 const cartHelper=require('../../helper/cartHelper')
 
-const profile=async(req,res,next)=>{
+const profile = async(req,res,next)=>{
     try{
-    const usercart=res.locals.user;
-    const category=await Category.find({})
+    const usercart = res.locals.user;
+    const category = await Category.find({})
     const count = await cartHelper.getCartCount(usercart.id)
-    const user=res.locals.user
+    const user = res.locals.user
     const address = await Address.find({user: usercart._id.toString()})
     if(address){
         const ad = address.forEach((x) => {
@@ -42,11 +42,11 @@ const editInfo = async (req, res, next) => {
 }
 
 
-const loadAddress=async(req,res)=>{
+const loadAddress = async(req,res)=>{
     try{
-        const category=await Category.find({})
-        let arr=[]
-        const user=res.locals.user
+        const category = await Category.find({})
+        let arr = []
+        const user = res.locals.user
         const address = await Address.find({user: user._id.toString()})
         if(address){
             const ad = address.forEach((x) => {
@@ -61,10 +61,10 @@ const loadAddress=async(req,res)=>{
     }
 }
 
-const loadaddAddress=async(req,res)=>
+const loadaddAddress = async(req,res)=>
 {
     try{
-        const category=await Category.find({})
+        const category = await Category.find({})
         res.render('addAddress',{category})
     }
     catch(error){
@@ -75,7 +75,7 @@ const loadaddAddress=async(req,res)=>
 
 
 
-const submitAddress=async(req,res)=>
+const submitAddress = async(req,res)=>
 {
     try{
      const userId=res.locals.user_id
@@ -113,11 +113,11 @@ const submitAddress=async(req,res)=>
     }
 }
 
-const loadEdit=async(req,res)=>{
-    const category=await Category.find({})
-    const id=req.query.id
-    const user=res.locals.user._id
-    const address=await Address.findOne({user:user, 'address._id':id},
+const loadEdit = async(req,res)=>{
+    const category = await Category.find({})
+    const id = req.query.id
+    const user = res.locals.user._id
+    const address = await Address.findOne({user:user, 'address._id':id},
     { 'address.$': 1 })
     console.log(address,"h",address.address[0],"addressedit")
     res.render('editAddress',{category,address:address.address[0]}) 

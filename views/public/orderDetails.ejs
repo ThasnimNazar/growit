@@ -7,10 +7,10 @@
     <!-- Header -->
 
     <section style="background-color: white">
-      <div class="container py-5">
+      <div class="container py-4">
         <div class="row">
-          <div class="col-lg-8">
-            <div class="card mb-4">
+          <div>
+            <div class="card" style=" border-color: rgb(1, 82, 1);">
               <div class="card-body">
                 <h4>My Orders</h4>
                 <br>     
@@ -20,8 +20,9 @@
                     <div class="container">
                         <div class="row order_d_inner">
                             <div class="col-md-6">
-                                <div class="details_item">
-                                    <h5>Order Info</h5>
+                                <div class="card" style="border-color: rgb(1, 82, 1); border-style: dashed;">
+                                    <div class="card-body">
+                                    <h5>Order Info:</h5>
                                     <br>
                                     <ul class="list">
                                         <li>Order ID: <%=orders[0]._id%></li>
@@ -30,14 +31,15 @@
                                         <li>Payment method: <%=orders[0].paymentMethod%></a></li>
                                         <li>Payment Status: <%=orders[0].paymentStatus%></a></li>
                                         <li>Order Status:<%=orders[0].orderStatus%></li>
-                                        <li>couponCode:<%=orders.couponCode%></li>
                                     </ul>
+                                </div>
                                 </div>
                             </div>
                         
                             <div class="col-md-6">
-                                <div class="details_item">
-                                    <h5>Shipping Address</h5>
+                                <div class="card" style="border-color: rgb(1, 82, 1); border-style: dashed;">
+                                    <div class="card-body">
+                                    <h5>Shipping Address:</h5>
                                     <br>
                                     <ul class="list">
                                         <li>Name: <%=address.item.name%></li>
@@ -47,6 +49,7 @@
                                         <li>Pincode: <%=address.item.pincode%></li>
                                         <li>State: <%=address.item.state%></li>
                                     </ul>
+                                </div>
                                 </div>
                             </div>
                         </div>

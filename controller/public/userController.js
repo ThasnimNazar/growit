@@ -24,15 +24,6 @@ const categoryhelper=require('../../helper/categoryHelper')
 const jwt = require('jsonwebtoken')
 
 
-
-
-
-
-
-
-
-
-
 const Securepassword = async (password) => {
     try {
         const passwordHash = await bcrypt.hash(password, 10);
@@ -42,10 +33,7 @@ const Securepassword = async (password) => {
         console.log(error.message)
     }
 }
-// const login=async(req,res)=>{
 
-//     res.render('login')
-// }
 
 const Loadregister = async (req, res) => {
     try {
@@ -185,21 +173,6 @@ const insertUser = async (req, res) => {
         }
 
 
-        // if (!/^\S+@\S+\.\S+$/.test(email)) {
-        //     return res.render("registration",{ message: "Invalid email format" });
-        //   }
-
-
-        //    if (!/^\d{10}$/.test(mobileno)) {
-        //    return res.render("registration",{ message: "Invalid mobile number format" });
-
-        // Replace with your input value
-
-        // Check if the input consists of the same digit repeated multiple times
-
-
-
-
         const user = new User({
             name: name,
             email: email,
@@ -238,62 +211,12 @@ const insertUser = async (req, res) => {
             res.redirect('/')
         }
 
-
-// const userData=await User.findOne({mobileno:mobileno})
-// console.log(userData,"udata u-c")
-//     if(userData){
-//     client.verify.v2
-//     .services(verifySid)
-//     .verifications.create({ to: `+91${mobileno}`, channel: "sms" })
-//     .then( (verification) => console.log(verification.status))
-//     .then(() => {
-//       const readline = require("readline").createInterface({
-//         input: process.stdin,
-//         output: process.stdout,
-//       });
-//       readline.question("Please enter the OTP:", (otpCode) => {
-//     client.verify.v2
-//     .services(verifySid)
-//     .verificationChecks.create({ to:`+91${req.body.mobileno}`, code: otpCode })
-//     .then((verification_check) => console.log(verification_check.status))
-//     .then(() => readline.close());
-//        });
-
-//     });
-//     res.render('otpverification',{mobileno:mobileno})
-
-    // const saveData=await user.save()
-
-    //     res.render('otpverification',{mobile:mobileno})
-
-    // }
-//     else {
-//     throw new Error('cant save the user data')
-// }
 }
     }
 catch (error) {
     console.log(error.message)
 }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const Loginload = async (req, res) => {
@@ -313,13 +236,6 @@ const Loginload = async (req, res) => {
     }
 
 }
-
-
-
-
-
-
-
 
 
 const verifyLogin = async (req, res) => {
@@ -373,21 +289,6 @@ const verifyLogin = async (req, res) => {
 
 
 
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const loadHome = async (req, res) => {
     try {
        
@@ -438,15 +339,6 @@ const verifyOtp = async (req, res) => {
         console.log(Otp)
         const mobileno = req.body.mobileno
         console.log(mobileno)
-        // const user=await User.findOne({mobileno:mobileno})
-        // console.log(user)
-        //  if(!user)
-        //  {
-        //     res.json('otpverification',{message:"user dont exist"})
-        //  }
-
-
-        // else{
         client.verify.v2
             .services(verifySid)
             .verificationChecks.create({ to: `+91${mobileno}`, code: Otp })
@@ -491,11 +383,6 @@ const userLogout = async (req, res) => {
 
 
 
-
-
-
-
-
 const displayProduct = async (req, res) => {
     try {
         const category = await Category.find({isListed:true});
@@ -504,7 +391,7 @@ const displayProduct = async (req, res) => {
         const selectedCategoryId = req.query.id || null;
 
       const page = parseInt(req.query.page) || 1; 
-      const limit = 10;
+      const limit = 6;
       const skip = (page - 1) * limit;
 
       const searchQuery = req.query.search || '';
@@ -592,32 +479,15 @@ const forgotpasswordOtp = async (req, res) => {
                             input: process.stdin,
                             output: process.stdout,
                         });
-                        //   readline.question("Please enter the OTP:", (otpCode) => {
-                        //     client.verify.v2
-                        //       .services(verifySid)
-                        //       .verificationChecks.create({ to:`+91${req.body.mobileno}`, code: otpCode })
-                        //       .then((verification_check) => console.log(verification_check.status))
-                        //       .then(() => readline.close());
-                        //   });
                         req.session.mobileno = user.mobileno
                         res.render('forgetOtp',{category})
                     });
-
             }
-
         }
         catch (error) {
             console.log(error.message)
         }
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -647,7 +517,7 @@ const verifyforgetOtp = async (req, res) => {
 
 }
 
-const categoryProduct=async(req,res)=>{
+const categoryProduct = async(req,res)=>{
     try{
        const category=req.query.category
        const categoryData=await Category.find({});
@@ -680,14 +550,6 @@ const categoryProduct=async(req,res)=>{
         console.log(error.message)
     }  
 }
-
-
-
-
-
-
-
-
 
 
 const resetPassword = async (req, res) => {
@@ -754,11 +616,6 @@ const applyCoupon = async (req, res, next) => {
             res.send(response)
         })
 }
-
-
-
-
-
 
 
 const addtoWishlist = async(req,res)=>{

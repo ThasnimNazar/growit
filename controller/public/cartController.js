@@ -21,25 +21,6 @@ const addToCart = (req, res) => {
 }
 
 
-
-
-
-
-
-
-
-
-
-// const loadCart=async(req,res)=>{
-//     try{
-//        const category=await Category.find({})
-//        res.render('cart',{category})
-//     }
-//     catch(error){
-//         console.log(error.message)
-//     }
-// }
-
 const loadCart = async (req, res) => {
     try {
         
@@ -100,7 +81,7 @@ const updateQuantity = (req, res) => {
 
 
 
-const checkOut=async(req,res)=>{
+const checkOut = async(req,res)=>{
     try{
    const category=await Category.find({})
 
