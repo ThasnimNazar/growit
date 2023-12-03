@@ -60,21 +60,21 @@ const verifyNumber = async (req, res) => {
         const indianMobileRegex = /^[6789]\d{9}$/;
 
         if (!indianMobileRegex.test(mobileno)) {
-            return res.render("signUp", { message: "Please enter a valid Indian mobile number.", formData: req.body });
+            return res.render("signUp", { message: "Please enter a valid Indian mobile number.", formData: req.body ,category});
         }
 
         const mobileRegex = /^\d{10}$/;
         if (!mobileRegex.test(mobileno)) {
-            return res.render("signUp", { message: "Mobile Number should have 10 digits!", formData: req.body });
+            return res.render("signUp", { message: "Mobile Number should have 10 digits!", formData: req.body ,category});
         }
 
         const mobilePattern = /^[1-9]\d{9}$/; // Allows any non-zero digit followed by 9 digits
         if (!mobilePattern.test(mobileno)) {
-            res.render("signUp", { message: "Invalid Mobile pattern!" })
+            res.render("signUp", { message: "Invalid Mobile pattern!" ,category})
         }
 
         if (existinguserwithMobile) {
-            return res.render("signUp", { message: "user with mobile no exists!" })
+            return res.render("signUp", { message: "user with mobile no exists!",category })
         }
         client.verify.v2
             .services(verifySid)
@@ -90,7 +90,7 @@ const verifyNumber = async (req, res) => {
     }
     catch (error) {
         console.log(error.message)
-    }
+    }  
 }
 
 
