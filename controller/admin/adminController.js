@@ -519,60 +519,110 @@ const deleteBanner = async (req, res) => {
   })
 }
 
-
 const loadOffer = async(req,res)=>{
   try{
-    const category=await Category.find()
-    const itemsPerPage = 8;
-    const currentpage = parseInt(req.query.page) || 1;
-    const startindex = (currentpage - 1) * itemsPerPage;
-    const endindex = startindex + itemsPerPage;
-    const totalpage = Math.ceil(category.length / 8);
-    const currentproduct = category.slice(startindex,endindex);
-
-    res.render('categoryOffer',{category:currentproduct, total:totalpage, currentpage })
-
+    const limit = parseInt(req.query.limit) || 3;
+    const page = parseInt(req.query.page) || 1;
+    const category = await Category.find({ discountPercentage: { $gt: 0 } }).skip((page-1)*limit).limit(limit)
+    console.log(category,'uu')
+    res.render('categoryOffer', { category, page});
   }
   catch(error){
     console.log(error.message)
   }
-}
+}        
 
 
 
-const postcategoryOffer = async(req,res)=>{
+
+const loadcreateCategoryoffer = async(req,res)=>{
   try{
-    const { id, offerPercentage } = req.body;
-
-    // Find the category
-    const category = await Category.findById(id);
-    if (!category) {
-        return res.status(404).json({ error: 'Category not found' });
-    }
-
-    // Find all products in the category
-    const products = await Product.find({ category: category._id });
-
-    // Update prices based on the offer percentage
-    products.forEach(async (product) => {
-        const newOfferPrice = (offerPercentage / 100) * product.price;
-        const newPrice = product.price - newOfferPrice;
-
-        // Update the product
-        await Product.findByIdAndUpdate(product._id, {
-            offerPrice: newOfferPrice,
-            price: newPrice,
-        });
-    });
-
-    console.log('Updated prices for products in category:', category.name);
-
-    res.redirect('/admin/categoryOffer');
+     const category = await Category.find({});
+     const product = await Product.find({})
+     res.render('loadaddCategoryoff',{category,product})
   }
   catch(error){
-    console.log(error.message)
+    console,log(error.message)
   }
 }
+
+
+
+
+
+const createCategoryOffer = async (req, res) => {
+  try {
+      const categoryId = req.body.categoryId
+      const Id = new ObjectId(categoryId)
+      const currentDate = new Date()
+      const category = await Category.findOne({ $and: [{ _id: Id,discountPercentage:{$gt:0} }] });
+      if (category == null) {
+          await Category.findOneAndUpdate({ _id: Id },
+              {
+                  $set:
+                      { discountPercentage: req.body.discountPercentage, discountValidity: req.body.validity }
+              }
+          )
+          offerHelper.addOfferPrice(Id).then((response)=>{
+            res.send({ status: "true" })
+          })
+          
+      } else {
+          res.send({ status: 'false' })
+      }
+  } catch (error) {
+      console.error(error.message);
+  }
+}
+
+const loadeditCategoryoffer = async(req,res)=>{
+  try{
+    const id = req.query.id
+    const category = await Category.find({_id:id})
+    res.render('editCategoryOffer', {category})
+} catch (error) {
+  console.error(error.message);  
+}
+
+  }
+
+  const postEditCategory = async(req,res)=>{
+    try{
+      const id = req.body.categoryId
+      const category = await Category.findByIdAndUpdate({_id:id},{
+       $set:{discountValidity:req.body.validity,discountPercentage:req.body.discountPercentage}
+      }) 
+      offerHelper.addOfferPrice(id) 
+       category.save().then(()=>{
+           res.send({status:true})
+       })
+
+    }
+    catch(error){
+      console.log(error.message)
+    }
+  }     
+
+
+  const deleteCategoryoff = async(req,res)=>{
+    try{
+      const id = req.query.id
+      await Category.findByIdAndUpdate({_id:id.toString()},{
+           $set:{discountPercentage:0,discountValidity: null}
+       })
+       offerHelper.addOfferPrice(id.toString())
+       .then((response)=>{
+           res.send({status:true})
+       })
+      
+   } catch (error) {
+     console.error(error.message);  
+   }
+   
+  }
+ 
+
+
 
 
 
@@ -590,7 +640,6 @@ const productofferList = async(req,res)=>{
 
 
 
-
 const addproductOffer = async(req,res)=>{
   try{
     const product = await Product.find({})
@@ -602,7 +651,7 @@ const addproductOffer = async(req,res)=>{
   }
 }
 
-
+    
 
 
 
@@ -628,7 +677,7 @@ const createproductOffer = async(req,res)=>{
       console.error(error.message);  
     }
     
-}
+}    
 
 
 
@@ -665,7 +714,7 @@ const deleteOffer = async(req,res)=>{
     try {
         const id = req.query.id
         console.log(id)
-        const cat=await Category.find({_id:new ObjectId (id)})
+        const cat=await Category.find({_id:id})
         console.log(cat,"kkat")
        await Category.findByIdAndUpdate({_id:id.toString()},{
             $set:{discountPercentage:0,discountValidity: null}
@@ -674,7 +723,7 @@ const deleteOffer = async(req,res)=>{
         .then((response)=>{
             res.send({status:true})
         })
-       
+             
     } catch (error) {
       console.error(error.message);  
     }
@@ -712,16 +761,19 @@ module.exports={
     loadEditBanner,
     editBanner,
     loadOffer,
-    postcategoryOffer,
+    createCategoryOffer,
+    loadeditCategoryoffer,
     productofferList,
     addproductOffer,
     createproductOffer,
     loadEditoffer,
     postOffer,
-    deleteOffer
+    deleteOffer,
+    loadcreateCategoryoffer,
+    postEditCategory,
+    deleteCategoryoff
     
-
-}
+}            
 
 
 

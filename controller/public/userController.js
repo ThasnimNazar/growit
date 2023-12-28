@@ -8,8 +8,8 @@ const couponHelper= require('../../helper/couponHelper')
 const Banner = require('../../models/bannermodel')
 const Wishlist = require('../../models/wishlistModel')
 const { ObjectId } = require('mongoose')
-const { query } = require('express')
-
+const { query } = require('express')       
+    
 
 
 
@@ -22,7 +22,7 @@ require('dotenv').config()
 const otpHelper = require('../../helper/otphelper')
 const categoryhelper=require('../../helper/categoryHelper')
 const jwt = require('jsonwebtoken')
-
+     
 
 const Securepassword = async (password) => {
     try {

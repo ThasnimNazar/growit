@@ -8,7 +8,7 @@ const express = require('express')
 const app = express();
 const path = require('path')
 const nocache=require('nocache')
-app.use(express.json())
+app.use(express.json())  
 
 
 const mongoURI = "mongodb+srv://Thasnim:lg2atUSE9qx8NlUS@cluster0.ixyvumc.mongodb.net/";

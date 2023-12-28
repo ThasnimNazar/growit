@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="admin-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <%- include('./includes/sidebar.ejs')%>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+        </header>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Add Categories </h2>
+                </div>
+            </div>
+            <div class="card p-20 h-30">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <form id="categoryForm">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label" id="catLabel">Category</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="category" id="product_name" />
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label" id="desLabel">Description</label>
+                                    <textarea name="description" id="description" class="form-control" rows="4" placeholder="description here.."></textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <button type="submit" class="btn btn-success">Add Category</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div> <!-- .row // -->
+                </div> <!-- card body .// -->
+            </div> <!-- card .// -->
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+
+    <script>
+        //get all the form data using event listner
+        const form = document.getElementById('categoryForm')
+        form.addEventListener('submit', async (event)=>{
+            //prevent page refreshing
+            event.preventDefault()
+
+            //get form data
+            const data = new FormData(form)
+            const formData = {
+                category : data.get('category'),
+                description : data.get('description')
+            }
+
+            if(formData.category.trim() === ""){
+                Toastify({
+                        text: 'category required',
+                        className: "info",
+                        style: {
+                            background: "linear-gradient(to right, #240000, #ff0000)",
+                        }
+                        }).showToast();
+                return
+                
+            }else if(formData.description.trim() === ""){
+                Toastify({
+                        text: 'Description required',
+                        className: "info",
+                        style: {
+                            background: "linear-gradient(to right, #240000, #ff0000)",
+                        }
+                        }).showToast();
+                return 
+
+            }else{
+                try {
+                const response = await fetch('/admin/create-category', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+                });
+                
+                const resData = await response.json();
+                if(resData.status === "success"){
+                    Toastify({
+                        text: resData.msg,
+                        className: "info",
+                        style: {
+                            background: "linear-gradient(to right, #00b09b, #96c93d)",
+                        }
+                        }).showToast();
+                }else{
+                    Toastify({
+                        text: resData.msg,
+                        className: "info",
+                        style: {
+                            background: "linear-gradient(to right, #240000, #ff0000)",
+                        }
+                        }).showToast();
+                }
+            } catch (error) {
+                Toastify({
+                        text: error.message,
+                        className: "info",
+                        style: {
+                            background: "linear-gradient(to right, #240000, #ff0000)",
+                        }
+                        }).showToast();
+            }
+            }
+            //validate the form
+            //like formData.category === "" or not check okkk
+            //if null return so it wont do to the fetch okkk
+            //also validate the rest of the fields
+            //show the validation result in the form like category required, description required
+
+            
+        })
+    </script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendors/select2.min.js"></script>
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="assets/js/main.js" type="text/javascript"></script>
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+</html>

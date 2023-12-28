@@ -51,7 +51,13 @@
                                                         <%=cart.carted.name%>
                                                     </h6>
                                                     <h5>
-                                                        <%=cart.carted.price%>
+                                                        <% if(cart.carted.discountedPrice>0){ %>
+                                    <h5><i class="fa fa-inr" aria-hidden="true"></i>
+                                      <%=cart.carted.discountedPrice%></h5>
+                                    <% }else{ %>
+                                    <h5><i class="fa fa-inr" aria-hidden="true"></i>
+                                        <%=cart.carted.price%></h5>
+                                      <% } %>
                                                     </h5>
                                                 </div>
                                             </td>
@@ -74,13 +80,13 @@
                                                 </div>
                                             </td>
                                             <td class="column-4">
-                                                <span id="subTotal-<%=cart.item%>" class="subTotalVal">₹<%= cart.total
-                                                        %></span>
+                                                <span id="subTotal-<%=cart.item%>" class="subTotalVal">₹<%= cart.total %></span> 
+
                                             </td>
                                             <td class="action" style="padding-left: 40px; font-size: 20px;"
                                                 data-title="Remove">
                                                 <a href="#" class="text-muted"
-                                                    onclick="deleteProduct('<%=cart._id%>','<%=cart.item%>','<%= cart.quantity %>')"><i
+                                                    onclick="deleteProduct('<%=cart._id%>','<%=user._id%>','<%=cart.item%>','<%= cart.quantity %>')"><i
                                                         class="fa fa-trash" aria-hidden="true"></i></a>
                                             </td>
                                         </tr>
@@ -106,9 +112,21 @@
                    
                     <div class="cart__total">
                         <h6>Cart total</h6>
+                        <% cart.forEach(function(cart,index) {%>
                         <ul>
-                            <li>Total<span>₹<%=cartTotal%></span></li>
+
+                        <% if(cart.carted.discountedPrice>0){ %>
+                            <li>Discounted Price<span id="dis">₹<%=cart.carted.discountedPrice%></span></li>
+                                    <% }else{ %>
+                            <li>Product Price<span id="pr"><%=cart.carted.price%></span></li> 
+                            <li>Quantity<span id="quantity"><%=cart.quantity%></span></li>
+                            <hr>
+                            <li>Product Total<span id="pp"><%=cart.total%></span></li> 
+                        <% } %>
+                        <% }) %>
+                            <li>Cart Total<span id="total">₹<%=cartTotal%></span></li>
                         </ul>
+                    
                         <a href="/checkout" class="primary-btn">Proceed to checkout</a>
                     </div>
                 </div>
@@ -249,7 +267,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
 
-        function deleteProduct(cartId, proId, quantity) {
+        function deleteProduct(cartId, userId,proId,quantity,) {
             console.log('enter')
             Swal.fire({
                 title: 'Are you sure?',
@@ -267,6 +285,7 @@
                         method: 'delete',
                         data: {
                             cartId: cartId,
+                            userId:userId,
                             proId: proId,
                             quantity: quantity
                         },
@@ -279,6 +298,8 @@
                 }
             })
         }
+
+
 
         function changeQuantity(cartId, proId, userId, index, count) {
             event.preventDefault();
@@ -310,7 +331,7 @@
                             success: (response) => {
                                 console.log(response.status)
                                 if (response.status) {
-                                    location.reload()
+                                     location.reload() 
                                 }
                             }
                         })
@@ -328,12 +349,13 @@
                         quantity: quantity
                     },
                     success: (response) => {
+                        location.reload();
                         if (response.status == true) {
                             const qtyElem = document.querySelector(`#qty-val-${proId}`)
                             qtyElem.value = response.newQuantity
                             const subTotalVal = document.querySelector(`#subTotal-${proId}`)
-                            subTotalVal.innerHTML = response.newSubTotal
-                            document.getElementById('total').innerHTML = response.cartTotal
+                            subTotalVal.innerHTML = '₹' + response.newSubTotal
+                            document.getElementById('total').innerHTML = '₹ ' + response.cartTotal
                         } else if (response.status == 'outOfStock') {
                             Swal.fire({
                                 icon: 'warning',
@@ -343,9 +365,11 @@
                             })
                         }
                     }
-                })
+                })      
             }
         }
+
+        
 
         function applyCoupon(total) {
     console.log('keri')

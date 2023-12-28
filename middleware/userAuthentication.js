@@ -51,7 +51,7 @@ const checkSession=async(req,res,next)=>{
     res.locals.user_id=req.session?.user_id; 
     // console.log(user,'user1')
     res.locals.name=req.session?.username 
-    console.log(req.session?.name,'name')
+    console.log( res.locals.name,'name')
     const isAuthenticated=req.session?.user_id;
     res.locals.isAuthenticated=isAuthenticated; 
     next() 

@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:00 GMT -->
+<head>
+    <meta charset="utf-8">
+    <title>WebApp</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="admin-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+
+     <!-- sidebar start -->
+   <%- include('./includes/sidebar.ejs')%>
+   <!-- sidebar ends -->
+<main class="main-wrap">
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Products List</h2>
+               
+            </div>
+            <div>
+                <a href="/admin/addproduct" class="btn btn-success btn-sm rounded">Create new</a>
+            </div>
+        </div>
+        <div class="card mb-4">
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">#ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Date</th>
+                <!-- <th scope="col">Category</th> -->
+               
+                <th scope="col" class="text-end">Action</th>
+              </tr>
+            </thead>
+            
+            <tbody>
+                <% orders.forEach(function(order,index) {%>
+                    <tr>
+                        <td><%=order.orders._id%></td>
+                        <td><b><%=order.orders.name%></b></td>
+                        <td>₹<%=order.orders.totalPrice%></td>
+                        <td>
+                            <% if (order.orders.orderStatus == 'Placed') { %>
+                                <div class="badge rounded-pill alert-primary"><%= order.orders.orderStatus %></div>
+                            <% } else if (order.orders.orderStatus == 'Dispatched') { %>
+                                <div class="badge rounded-pill alert-info"><%= order.orders.orderStatus %></div>
+                            <% } else if (order.orders.orderStatus == 'Cancel Requested' ) { %>
+                                <div class="badge rounded-pill alert-warning"><%= order.orders.orderStatus %></div>
+                            <% } else if (order.orders.orderStatus == 'Delivered') { %>
+                                <div class="badge rounded-pill alert-success"><%= order.orders.orderStatus %></div>
+                            <% } else if (order.orders.orderStatus == 'Return Requested' ) { %>
+                                <div class="badge rounded-pill alert-warning"><%= order.orders.orderStatus %></div>
+                            <% } else { %>
+                                <div class="badge rounded-pill alert-danger"><%= order.orders.orderStatus %></div>
+                            <% } %>
+                        </td>
+                    
+                        <td><%=order.orders.createdAt.toLocaleString()%></td>
+                        <td class="text-end">
+                            <div class="container mt-5">
+                                
+                                
+                               
+                            </div>
+                            
+                            <a href="/admin/orderDetails?id=<%=order.orders._id%>" class="btn btn-md btn-primary rounded font-sm">Detail</a>
+                           
+                            <div class="dropdown  pt-2">
+
+                                <a  data-bs-toggle="dropdown" class="btn btn-md btn-primary rounded font-sm">Status</a>
+                                <div class="dropdown-menu">
+                                  
+                                    <%if(order.orders.orderStatus=='Placed'||order.orders.orderStatus=='Cancel Declined'){%>
+                                        <a class="dropdown-item" onclick="orderStatus('<%=order.orders._id%>','Dispatched')">Dispatched</a>
+                                        <a class="dropdown-item" onclick="cancelStatus('<%=order.orders._id%>','<%=order.user%>','Cancel Accepted')">Cancel Order</a>
+                                    <%}else if(order.orders.orderStatus=='Dispatched'){%>
+                                        <a class="dropdown-item" onclick="orderStatus('<%=order.orders._id%>','Delivered')">Delivered</a>
+                                    <%}else if(order.orders.orderStatus=='Cancel Requested'){%>
+                                        <a class="dropdown-item" onclick="cancelStatus('<%=order.orders._id%>','<%=order.user%>','Cancel Accepted')"> Accept Cancel</a>
+                                        <a class="dropdown-item" onclick="cancelStatus('<%=order.orders._id%>','<%=order.user%>','Cancel Declined')">Decline Cancel</a>
+                                    <%}else if(order.orders.orderStatus=='Return Requested'){%>
+                                        <a class="dropdown-item" onclick="returnOrder('<%=order.orders._id%>','<%=order.user%>','Return Accepted')"> Accept Return</a>
+                                        <a class="dropdown-item" onclick="returnOrder('<%=order.orders._id%>','<%=order.user%>','Return Declined')">Decline Return</a>
+                                    <%}%>
+                                </div>
+                            </div> <!-- dropdown //end -->
+                            <div class="dropdown">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                                   Status
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                  
+                                    <%if(order.orders.orderStatus=='Placed'||order.orders.orderStatus=='Cancel Declined'){%>
+                                        <a class="dropdown-item" onclick="orderStatus('<%=order.orders._id%>','Dispatched')">Dispatched</a>
+                                        <a class="dropdown-item" onclick="cancelStatus('<%=order.orders._id%>','<%=order.user%>','Cancel Accepted')">Cancel Order</a>
+                                    <%}else if(order.orders.orderStatus=='Dispatched'){%>
+                                        <a class="dropdown-item" onclick="orderStatus('<%=order.orders._id%>','Delivered')">Delivered</a>
+                                    <%}else if(order.orders.orderStatus=='Cancel Requested'){%>
+                                        <a class="dropdown-item" onclick="cancelStatus('<%=order.orders._id%>','<%=order.user%>','Cancel Accepted')"> Accept Cancel</a>
+                                        <a class="dropdown-item" onclick="cancelStatus('<%=order.orders._id%>','<%=order.user%>','Cancel Declined')">Decline Cancel</a>
+                                    <%}else if(order.orders.orderStatus=='Return Requested'){%>
+                                        <a class="dropdown-item" onclick="returnOrder('<%=order.orders._id%>','<%=order.user%>','Return Accepted')"> Accept Return</a>
+                                        <a class="dropdown-item" onclick="returnOrder('<%=order.orders._id%>','<%=order.user%>','Return Declined')">Decline Return</a>
+                                    <%}%>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>  
+
+                           
+                        
+      <!-- <span class="sr-only"></span> --> 
+      <div class="pagination-area mt-15 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <% if (i === page) { %>
+                        <li class="page-item active" ><span class="btn btn-primary"><%= i %></span></li>
+                    <% } else { %>
+                        <li class="page-item"><a class="page-link btn btn-secondary" href="/admin/orderManage?page=<%= i %>&limit=<%= limit %>"><%= i %></a></li>
+                    <% } %>
+                <% } %>
+                
+                
+            </ul>
+        </nav>
+    </div> 
+                           
+     
+    
+                   
+                                
+    </section>
+</main>
+
+<script>
+
+    function orderStatus(orderId, status){
+      console.log(orderId, status,'hbdsv')
+      $.ajax({
+        url:'/admin/orderStatus',
+        method:'put',
+        data: {
+          orderId: orderId,
+          status: status,
+        },
+        success:(response)=>
+        {
+          if(response)
+          {
+            location.reload()
+          }
+        }
+      })
+    }
+
+    function cancelStatus(orderId,userId, status){
+      console.log(orderId, status,userId);
+      $.ajax({
+        url:'/admin/cancelOrders',
+        method:'put',
+        data: {
+          orderId: orderId,
+          status: status,
+          userId:userId 
+        },
+        success:(response)=>
+        {
+          if(response)
+          {
+            location.reload()
+          }
+        }
+      })
+    }
+
+
+    function returnOrder(orderId,userId, status){
+      console.log(orderId, status);
+      $.ajax({
+        url:'/admin/returnOrders',
+        method:'put',
+        data: {
+          orderId: orderId,
+          status: status,
+          userId:userId 
+        },
+        success:(response)=>
+        {
+          if(response)
+          {
+            location.reload()
+          }
+        }
+      })
+    }
+
+    </script>
+    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+</body>
+</html>
+

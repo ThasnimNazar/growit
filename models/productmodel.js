@@ -41,7 +41,7 @@ const productSchema=mongoose.Schema({
     //     default:true
     // },
     
-    discountPercentage:{
+    discountPercentage:{      
         type:Number,
         default:0
     },discountValidity:{
@@ -58,6 +58,11 @@ const productSchema=mongoose.Schema({
       },
 
     isProductListed:{
+        type:Boolean,
+        default:true
+      },
+
+      isCategoryListed:{
         type:Boolean,
         default:true
       },

@@ -56,7 +56,7 @@ router.post('/verifyOtp',userController.verifyOtp)
 
 //product
 router.get('/displayproducts',auth.isBlocked,userController.displayProduct)
-router.get('/productPage',auth.isBlocked,productController.productpage)
+router.get('/productPage',auth.isLogin,auth.isBlocked,productController.productpage)
 router.get('/categoryPage',auth.isLogout,auth.isBlocked,userController.categoryProduct)
 
 //forgetpassword
@@ -77,11 +77,11 @@ router.post('/submitAddress',  auth.isBlocked,profileController.submitAddress)
 // router.get('/addAddress',profileController.addAddress)
 router.get('/loadedit',  auth.isBlocked,profileController.loadEdit)
 router.post('/edit', auth.isBlocked,profileController.editAddress)
-router.post('/deleteAddress',auth.isBlocked,profileController.deleteAddress)
+router.post('/deleteAddress',auth.isBlocked,profileController.deleteAddress)   
 
 
 
-router.post('/addtocart/:id',auth.cartBlocked,cartController.addToCart)
+router.post('/addtocart/:id',auth.cartBlocked,cartController.addToCart)    
 router.get('/loadcart',auth.isLogin, auth.isBlocked,cartController.loadCart)
 router.put('/change-product-quantity',cartController.updateQuantity)
 router.delete('/deleteCart',cartController.deleteProductController)

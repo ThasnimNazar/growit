@@ -22,77 +22,132 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.1/font/bootstrap-icons.css">
     <link rel="canonical" href="https://codepen.io/nakome/pen/vmKwQg">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
 
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css'>
 
 </head>
 <body>
+
     <%- include('./includes/sidebar.ejs') %>
     <main class="main-wrap">
         <section class="content-main">
-            <div class="container">
-                <div class="row">
-                       
-                      
-                          
-                                <div class="text-center mt-5">
-                                    <p class="text-danger"><%=(typeof message!=='undefined')?message:""%></p>
-                                </div>
-                                <% for(let i=0 ; i< category.length ;i++){%>
-                                    <div class="col-lg-3">
-                                <div class="card ">
-                                    <div class="card-header">
-                                        <h4>Offer</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="input-upload">
-                                          <h5 style="color: rgb(28, 25, 160);"><%= category[i].name %></h5> 
-                                            <form action="/admin/categoryOffer" method="post">
-                                                <h6><label for="offer">Update Category Offer</label></h6>
-                                                <input class="form-control" name="offerPercentage" type="text">
-                                                <input class="form-control" name="id" type="hidden" value="<%= category[i]._id %>">
-                                                <br>
-                                                <button class="btn btn-sm btn-light rounded " style="color: rgb(255, 255, 255); background-color: rgb(70, 149, 122);" type="submit">save</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div> <!-- card end// -->
-                    
-                            </div>
-                    
-                                <%}%>
-                             
-                            
 
-                              
-                           
-                        </div>
-                    </div>
-                    
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    </div>
-                </div> 
+    <div class="container" style="padding: 50px;">
+        <div class="row mb-3">
+            <div class="col-md-12 d-flex justify-content-end">
+                <button class="btn btn-primary button-spacing">
+                    <a href="/admin/createCategoryoffer" style="color: white;">Create Category
+                        Offer</a>
+                </button>
             </div>
-        </section> 
-        <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script>
-                    document.write(new Date().getFullYear())
-                    </script> ©, Evara - HTML Ecommerce Template .
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">
-                        All rights reserved
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Category Offers</h2>
+                <div class="table-container" id="tableBody">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Validity</th>
+                                    <th>Discount Percentage</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody">
+                                <!-- Add rows for category offers here -->
+                                <% category.forEach((Category)=>{ %>
+                                    <tr>
+                                        <td>
+                                            <%= Category.name %>
+                                        </td>
+                                        <td>
+                                            <%= `${(Category.discountValidity?.getMonth() + 1).toString().padStart(2, '0')}-${Category.discountValidity?.getDate().toString().padStart(2, '0')}-${Category.discountValidity?.getFullYear()}`;%>
+                                        </td>
+                                        <td>
+                                            <%= Category.discountPercentage %>
+                                        </td>
+                                        <td>
+                                            <!-- Add action buttons (e.g., edit, delete) here -->
+                                            <div class="dropdown">
+                                                <button class="btn btn-light rounded btn-sm font-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="material-icons md-more_vert"></i>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <!-- Dropdown items go here -->
+                                                    <a class="dropdown-item" href="/admin/loadeditCategoryoffer?id=<%= Category._id %>">Edit</a>
+                                                    <a class="dropdown-item text-danger deleteButton" href="#" data-id="<%= Category._id %>">Delete</a>                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                        <!-- Add more rows if needed -->
+                            </tbody>
+                        </table>
                     </div>
+                    <br>
+
                 </div>
-            </div>
-        </footer>
-    </main>
+        </section>
+    </main>           
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        
+        document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('deleteButton')) {
+            event.preventDefault();
+            var categoryId = event.target.dataset.id;
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this category offer!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: `/admin/deleteCatoffer?id=${categoryId}`,
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Category offer deleted successfully!',
+                            }).then(()=>{
+                                location.reload()
+                            })
+                            $(`tr[data-id='${categoryId}']`).remove();
+                        },
+                        error: function(error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'An error occurred while deleting the category offer.',
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    // Initial setup
+
+
+</script>
+
+</body>
+</html>

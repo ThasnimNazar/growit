@@ -1,0 +1,421 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="admin-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.1/font/bootstrap-icons.css">
+    <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+  
+
+</head>
+<body>
+    <%- include('./includes/sidebar.ejs')%>
+    <main class="main-wrap">
+        <section class="content-main">
+            <div class="row">
+                <div class="col-lg-9 justify-content-center">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Add New Product</h4>
+                        </div>
+                        <div class="card-body justify-content-center">
+                            <!-- <form action="/admin/addproduct " method="post" enctype="multipart/form-data"> -->
+                                <div class="text-center mt-5">
+                                    <p class="text-danger"><%=(typeof message!=='undefined')?message:""%></p>
+                                </div>
+                            <form id="productForm" method="POST" action="/admin/editproduct"enctype="multipart/form-data">
+                                 <div class="mb-4">
+                                 <input type="hidden" name="id" value="<%= product._id %>">
+                                 </div>
+
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Product name</label>
+                                    <input type="text" name="name" id="product-name" value="<%= product.name %>" class="form-control" >
+                                    <!-- <span id="nameError" class="error"></span> -->
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Full description</label>
+                                    <textarea name="description" id="product-description" class="form-control" rows="4"><%= product.description %></textarea>
+                                    <!-- <span id="descriptionError" class="error"></span> -->
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-4">
+                                        <label class="form-label">price</label>
+                                        <div class="row gx-2">
+                                            <input placeholder="$"  name="price" id="price" value="<%= product.price %>" class="form-control" onkeyup="priceValidation()">
+                                             <span id="priceError" class="error"></span>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <div class="card mb-4">
+                                    <div class="form-group mb-4">
+                                        <div>
+                                            <label class="form-label" for="images">Product Images</label>
+                                        </div>
+                                        <div id="imgPreviewContainer">
+                                            <!-- Images will be previewed here -->
+                                        </div>
+                                        <div>
+                                                 <% for(let i = 0; i < product.images?.length; i++) { %>
+                <img src="/product-images/create-images/<%= product.images[i] %>" id="imgView<%= i+1 %>" alt="product image" width="100px" height="100px" multiple accept=".jpeg, .jpg, .png, .webp">
+                <button type="button"
+                                                                            class="btn btn-danger btn-sm delete-btn"
+                                                                            onclick="deleteImage('imgView<%= i+1 %>')">Delete</button>
+                                                                </div>
+                                                                
+
+                                                            <div>
+                                                                <input type="file" id="productImages" name="images"
+                                                                    class="form-control" onchange="viewImages(event)"
+                                                                    multiple>
+                                                            </div>
+                                                        </div>
+
+                <% } %>
+                
+                <input type="hidden" id="deletedImages" name="deletedImages"
+                value="">               
+                                        
+                                        <!-- card end// -->
+                                    </div>
+                                 </div> 
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label">Category</label>
+                                      <select id="category" name="category" class="form-select">
+                <% category.forEach(function(category) { %>
+                    <option value="<%= category._id %>" <%= product.category && product.category.toString() === category._id.toString() ? 'selected' : '' %>><%= category.name %></option>
+                <% }); %>
+            </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="stock" class="form-label">Stock</label>
+                                    <input type="text" name="stock" type="number" min="1" max="100" value="<%= product.stock %>" class="form-control" id="stock" onkeyup="stockValidation()">
+                                    <span id="stockError"></span>
+                                    <!-- <span id="stockError" class="error"></span> -->
+                                </div>
+
+                                <div class="modal fade" id="cropImagePop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      <h4 class="modal-title" id="myModalLabel">
+                                      </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                      <div id="upload-demo" class="center-block"></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" id="cropImageBtn" class="btn btn-primary">Crop</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+
+                                <div class="mb-8">
+                                    <button type="submit" class="btn btn-success">
+                                        Save Products
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </section> 
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+       <script src="../admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+       <script src="../admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+       <script src="../admin-assets/js/vendors/select2.min.js"></script>
+       <script src="../admin-assets/js/vendors/perfect-scrollbar.js"></script>
+       <script src="../admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+
+       <script src="../admin-assets/js/main.js" type="text/javascript"></script>
+      
+       
+    <script>
+        const stock = document.getElementById("stock")
+
+        function stockValidation(){
+            const stockValue = stock.value
+			if(stockValue.trim()==0){
+				stockError.innerHTML = 'Stock is Required'
+				stockError.style.color = 'red'
+				stock.style.border = "solid 2px red";
+				return false;
+			}
+            if(stockValue <  0 ){
+				stockError.innerHTML = 'Stock Must be greater than or equal to zero'
+				stockError.style.color = 'red'
+				stock.style.border = "solid 2px red";
+				return false;
+			}
+            stockError.innerHTML = ""
+			stockError.style.color = "green"
+			stock.style.border = "solid 2px green";
+			return true
+        }
+
+        const price = document.getElementById("price")
+        function priceValidation() {
+        const priceValue = price.value 
+
+        if (priceValue.trim() === '' || priceValue.trim() == 0) {
+            priceError.innerHTML = 'Price is required and must be greater than zero';
+            priceError.style.color = 'red';
+            document.getElementById("price").style.border = "solid 2px red";
+            return false;
+        }
+
+        priceError.innerHTML = "";
+        priceError.style.color = "green";
+        document.getElementById("price").style.border = "solid 2px green";
+        return true;
+    }
+    </script>
+
+<script>
+    const productForm = document.getElementById('productForm');
+
+    productForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(productForm);
+
+        fetch('/admin/editproduct', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            // Check if the response is ok (status code 200-299)
+            if (!response.ok) {
+                // Convert the response body to text and throw it as an error
+                return response.text().then(errorText => {
+                    throw new Error(errorText);
+                });
+            }
+            return response.text();  // If response is ok, convert body to text
+        })
+        .then(data => {
+            window.location.href = '/admin/products';
+        })
+        .catch((error) => {
+            console.error('Error:', error.message);
+            alert(error.message);  // Now, this will display our error messages
+        });
+    });
+    
+</script>
+
+<script>
+
+    function viewImage1(event) {
+      document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
+    }
+    
+    // function viewImage2(event) {
+    //   document.getElementById('imgView2').src = URL.createObjectURL(event.target.files[0])
+    // }
+    
+    // function viewImage3(event) {
+    //   document.getElementById('imgView3').src = URL.createObjectURL(event.target.files[0])
+    // }
+    // function viewImage4(event) {
+    //   document.getElementById('imgView4').src = URL.createObjectURL(event.target.files[0])
+    // }
+      </script>
+
+ <script>
+    function deleteImage(imgViewId) {
+            const imageElement = document.getElementById(imgViewId);
+            const deletedImagesInput = document.getElementById('deletedImages');
+            console.log(deletedImagesInput,'input')
+
+            // Add the image's filename to the deleted images list
+            if (deletedImagesInput.value) {
+                deletedImagesInput.value += ',' + imageElement.src.split('/').pop();
+            } else {
+                deletedImagesInput.value = imageElement.src.split('/').pop();
+            }
+
+            // Remove image preview and its delete button from the page
+            const imageWrapper = imageElement.parentNode;  // Assuming this is the container of both the image and the delete button.
+            imageWrapper.parentNode.removeChild(imageWrapper);
+
+        }
+      
+
+
+//     function viewImage(event, index) {
+//         let input = event.target;
+//         let reader = new FileReader();
+    
+//         reader.onload = function() {
+//           let dataURL = reader.result;
+//           let image = document.getElementById('imgView' + index);
+//           image.src = dataURL;
+    
+//           // Initialize Cropper.js on the image
+//           let cropper = new Cropper(image, {  
+//             aspectRatio: 1 / 1, // Set the aspect ratio to 1:1 for square images
+//             viewMode: 1, // Set the view mode to crop box
+//             guides: true, // Show the crop guides
+//             background: false, // Do not show the background behind the image
+//             autoCropArea: 1, // Set the initial crop area to cover the whole image
+//             zoomable: true // Disable zooming to keep the image size fixed
+//           });
+    
+//           // Show the image cropper container
+//           let cropperContainer = document.querySelector('#croppedImg' + index).parentNode;
+//           cropperContainer.style.display = 'block';
+    
+//           // Update the cropped image when the "Save" button is clicked
+//           let saveButton = document.querySelector('#saveButton' + index);
+//           saveButton.addEventListener('click', async function() {
+//             let croppedCanvas = cropper.getCroppedCanvas({
+//               width: 371, 
+//               height: 450 
+//             });
+//             let croppedImage = document.getElementById("croppedImg" + index);
+//             croppedImage.src = croppedCanvas.toDataURL('image/jpeg/png/webp', 1.0);
+    
+//             // Generate a unique name for the cropped image file based on the current timestamp
+//             let timestamp = new Date().getTime();
+//             let fileName = `cropped-img-${timestamp}-${index}.png`;
+    
+//             await croppedCanvas.toBlob(blob => {
+//               let input = document.getElementById('input' + index)
+//               let imgFile = new File([blob], fileName, blob)
+//               const fileList = new DataTransfer();
+//               fileList.items.add(imgFile);
+//               input.files = fileList.files
+//             });
+//             // cropperContainer.style.display = 'none';
+//           });
+    
+//         };
+    
+//         reader.readAsDataURL(input.files[0]);
+//       }
+
+// $(".gambar").attr("src", "/no-image-upload.jpg");
+//   var $uploadCrop,
+//     tempFilename,
+//     rawImg,
+//     imageId;
+//   function readFile(input) {
+//     const filePath = input.value
+//     const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)/
+//     if(!allowedExtensions.exec(filePath)){
+//       Toastify({
+//           text: "Image Format not Supported",
+//           className: "info",
+//           style: {
+//               background: "linear-gradient(to right, #ff0000, #dd2a7f)",
+//           }
+//           }).showToast();
+//       return 
+//     }
+//     if (input.files && input.files[0]) {
+//       var reader = new FileReader();
+//       reader.onload = function (e) {
+//         $('.upload-demo').addClass('ready');
+//         $('#cropImagePop').modal('show');
+//         rawImg = e.target.result;
+//       }
+//       reader.readAsDataURL(input.files[0]);
+//     }
+//     else {
+//       swal("Sorry - you're browser doesn't support the FileReader API");
+//     }
+//   }
+
+//   $uploadCrop = $('#upload-demo').croppie({
+//     viewport: {
+//       width: 300,
+//       height: 300,
+//     },
+//     enforceBoundary: false,
+//     enableExif: true
+//   });
+//   $('#cropImagePop').on('shown.bs.modal', function () {
+//     $uploadCrop.croppie('bind', {
+//       url: rawImg
+//     }).then(function () {
+//       console.log('jQuery bind complete');
+//     });
+//   });
+
+//   $('.item-img').on('change', function () {
+//     imageId = $(this).data('id'); tempFilename = $(this).val();
+//     $('#cancelCropBtn').data('id', imageId); readFile(this);
+//   });
+//   $('#cropImageBtn').on('click', function (ev) {
+//     $uploadCrop.croppie('result', {
+//       type: 'base64',
+//       format: 'jpeg',
+//       size: { width: 300, height: 300 }
+//     }).then(function (resp) {
+//       $('#item-img-output').attr('src', resp);
+//       $('#cropImagePop').modal('hide');
+//     });
+//   });
+</script>
+
+
+        
+       
+  
+
+          
+      
+                    
+                   
+     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendors/select2.min.js"></script>
+    <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+     Main Script -->
+    <!-- <script src="assets/js/main.js" type="text/javascript"></script> -->
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
+</html>

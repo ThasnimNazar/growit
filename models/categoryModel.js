@@ -22,11 +22,14 @@ const categorySchema=mongoose.Schema({
         type:String,
         // required:true
     },
-    offerPercentage: {
-        type: Number,
-        default: 0 // Default to 0% discount
-      }
-
+    discountPercentage:{
+        type:Number,
+        default:0
+    },
+    discountValidity:{
+        type: Date,
+        default: new Date()
+    }
    
 })
 

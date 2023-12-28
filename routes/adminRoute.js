@@ -100,7 +100,13 @@ admin_route.get('/deleteBanner',adminController.deleteBanner)
 
 
 admin_route.get('/loadoffer',adminController.loadOffer)
-admin_route.post('/categoryOffer',adminController.postcategoryOffer)
+admin_route.get('/createCategoryoffer',adminController.loadcreateCategoryoffer)
+admin_route.post('/postcategoryOffer',adminController.createCategoryOffer)
+admin_route.get('/loadeditCategoryoffer',adminController.loadeditCategoryoffer)
+admin_route.post('/posteditCatOffer',adminController.postEditCategory)
+admin_route.delete('/deleteCatoffer',adminController.deleteCategoryoff)    
+
+
 admin_route.get('/productOffer',adminController.productofferList)
 admin_route.get('/addOffer',adminController.addproductOffer)
 admin_route.post('/postProduct',adminController.createproductOffer)

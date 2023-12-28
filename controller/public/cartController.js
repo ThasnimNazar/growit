@@ -18,12 +18,12 @@ const addToCart = (req, res) => {
     } catch (error) {
         console.log(error.message)
     }
-}
+}           
 
 
 const loadCart = async (req, res) => {
     try {
-        
+           
         const user = res.locals.user
         console.log(user,'11')
         const count = await cartHelper.getCartCount(user.id)
@@ -49,12 +49,13 @@ const loadCart = async (req, res) => {
                         foreignField: "_id",
                         as: "carted"
                     }
-                },
+                },    
                 {
                     $project:{
                         item: "$cartItems.productId",
                         quantity: "$cartItems.quantity",
                         total: "$cartItems.total",
+                        discountedPrice:"$cartItems.discountedPrice",
                         carted: { $arrayElemAt: ["$carted", 0]}
                     }
                 }
@@ -167,6 +168,8 @@ const checkOutAddress = async (req, res, next) => {
     }
   }
 
+
+  
   const deleteProductController = (req, res, next) => {
     console.log('enter')
     cartHelper.deleteproducts(req.body).then((response) => {
