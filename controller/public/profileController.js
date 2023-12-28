@@ -17,7 +17,7 @@ const profile = async(req,res,next)=>{
         })
 
     const user = res.locals.user
-    res.render('userProfile', { user, count ,category,arr});
+    res.render('userProfile', { user, count ,category,ad});
     }
   } catch (error) {
     console.log(error.message)
