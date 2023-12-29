@@ -8,7 +8,8 @@ const couponHelper= require('../../helper/couponHelper')
 const Banner = require('../../models/bannermodel')
 const Wishlist = require('../../models/wishlistModel')
 const { ObjectId } = require('mongoose')
-const { query } = require('express')       
+const { query } = require('express') 
+const mongoose=require("mongoose");      
     
 
 
@@ -496,9 +497,10 @@ const verifyforgetOtp = async (req, res) => {
     const otp = req.body.otp;
     const mobileno = req.session.mobileno
     const user = await User.findOne({ mobileno: mobileno })
+    const category = await Category.find({})
     // console.log(otp,mobileno,user,"hh");
     if (!user) {
-        res.render('forgetOtp', { message: "User not registered" })
+        res.render('forgetOtp', { message: "User not registered" ,category})
     } else {
         client.verify.v2
             .services(verifySid)
@@ -508,9 +510,9 @@ const verifyforgetOtp = async (req, res) => {
                 if (verification_check.status === "approved") {
                     //   req.session.loggedIn = true;
                     //   req.session.user_id = user._id;
-                    res.render('resetPssword');
+                    res.render('resetPssword',{category});
                 } else if (verification_check.status === "denied") {
-                    res.render('forgetOtp', { message: 'Incorrect OTP' });
+                    res.render('forgetOtp', { message: 'Incorrect OTP' ,category});
                 }
             })
     }
@@ -631,9 +633,9 @@ const addtoWishlist = async(req,res)=>{
             if (userData.products.includes(productId)) {
               await Wishlist.updateOne(
                 { userId: userId },
-                { $pull: { products: productId } }
+                { $pull: { products:productId.trim() } }
               );
-              const newWishlist = await Wishlist.findOne({
+              const newWishlist = await Wishlist.findOne({    
                 userId:userId,
               });
              
@@ -641,7 +643,7 @@ const addtoWishlist = async(req,res)=>{
               const wishlistLength = newWishlist.products.length;
               res.json({ status: false, wishlistLength });
             } else {
-              userData.products.push(productId);
+              userData.products.push(productId.trim());
               await userData.save();
               const wishlistLength = userData.products.length;
               res.json({ status: true, wishlistLength });
@@ -651,7 +653,7 @@ const addtoWishlist = async(req,res)=>{
 
             const newWishlist = new Wishlist({
               userId: userId,
-              products: [productId],
+              products: [productId.trim()],
             });          
             await newWishlist.save();
             console.log(newWishlist,'so')
@@ -687,6 +689,7 @@ const addtoWishlist = async(req,res)=>{
                           name: 1,
                           images: 1,
                           price: 1,
+                          discountedPrice: 1,
                           description: 1,
                           
                         },
@@ -704,6 +707,7 @@ const addtoWishlist = async(req,res)=>{
                     name: "$product.name",
                     images: "$product.images",
                     price: "$product.price",
+                    discountedPrice: "$product.discountedPrice",
                     description: "$product.description",
                     
                   },
@@ -718,23 +722,27 @@ const addtoWishlist = async(req,res)=>{
     }
 
     const deleteWishlist = async(req,res)=>{
-            try {
-              const { productId } = req.body;
-              const userId = res.locals.user._id;
-              console.log(userId)
-              await Wishlist.updateOne(
-                { userId: userId },
-                { $pull: { products: productId } }
-              );
-              const updatedWishlist = await Wishlist.findOne();
-              const wishlistLength = updatedWishlist.products.length;
-              res.json({ message: "Product deleted successfully", wishlistLength });
-            } catch (error) {
-              console.log(error.message);
-            }
-          };
-
-
+        try {
+          let { productId } = req.body;
+          productId= productId.trim()
+          console.log(productId,'ii')
+          const userId = res.locals.user._id;
+          console.log(userId,'mn')
+          const wishlist = await Wishlist.findOne({ userId: userId });
+          const update = await Wishlist.findOneAndUpdate(
+            { userId: userId },
+            { $pull: { products:productId} }  
+          );
+          console.log(update,'up')
+          const updatedWishlist = await Wishlist.findOne({ userId: userId });
+          console.log(updatedWishlist,'kk')
+          const wishlistLength = updatedWishlist.products.length;
+          console.log(wishlistLength,'leng')
+          res.json({ message: "Product deleted successfully", wishlistLength });
+        } catch (error) {
+          console.log(error.message);  
+        }
+      };   
      
 module.exports = {
     Loadregister,

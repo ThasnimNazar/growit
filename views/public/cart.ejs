@@ -117,11 +117,11 @@
 
                         <% if(cart.carted.discountedPrice>0){ %>
                             <li>Discounted Price<span id="dis">₹<%=cart.carted.discountedPrice%></span></li>
+                            <li>Original Product Price<span id="pr">₹<%=cart.carted.price%></span></li> 
                                     <% }else{ %>
-                            <li>Product Price<span id="pr"><%=cart.carted.price%></span></li> 
+                            <li>Product Price<span id="pr">₹<%=cart.carted.price%></span></li> 
                             <li>Quantity<span id="quantity"><%=cart.quantity%></span></li>
                             <hr>
-                            <li>Product Total<span id="pp"><%=cart.total%></span></li> 
                         <% } %>
                         <% }) %>
                             <li>Cart Total<span id="total">₹<%=cartTotal%></span></li>
@@ -356,7 +356,7 @@
                             const subTotalVal = document.querySelector(`#subTotal-${proId}`)
                             subTotalVal.innerHTML = '₹' + response.newSubTotal
                             document.getElementById('total').innerHTML = '₹ ' + response.cartTotal
-                        } else if (response.status == 'outOfStock') {
+                        } else if (response.status == 'Out of stock') {
                             Swal.fire({
                                 icon: 'warning',
                                 title: 'Out Of Stock',

@@ -113,7 +113,7 @@
         function addToWishlist(productId){
          console.log("addtowish ajx")
     $.ajax({
-      url: `/addwishlist?productId= ${productId}`,
+      url: `/addwishlist?productId= ${productId.trim()}`,
       method: 'post',
       success: (response) => {
           const wishlistButton = document.getElementById(`wishlistButton_${productId}`);

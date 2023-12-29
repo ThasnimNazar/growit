@@ -40,7 +40,9 @@ mongoose.connect(mongoURI, {
     saveUninitialized: true,
     store: userStore,
     name: 'user_sid',
-    cookie: { path: '/' }
+    cookie: { path: '/',
+    maxAge: 3600000 
+  }
   });
 
 
@@ -50,7 +52,9 @@ mongoose.connect(mongoURI, {
     saveUninitialized: true,
     store: adminStore,
     name: 'admin_sid',
-    cookie: { path: '/admin' }
+    cookie: { path: '/admin',
+    maxAge: 3600000 
+  }
   });
 
  
@@ -83,6 +87,7 @@ app.use(express.static('./views'))
 app.use(express.static(path.join(__dirname,'public/css')))
 app.use(express.static(path.join(__dirname,'./views/public/includes/header.ejs')))
 app.use(express.static(path.join(__dirname,'./views/public/product-images/create-images')))
+app.set('views', path.join(__dirname, 'views'))
 
 
 const mainRoute=require('./routes/routes') 
@@ -101,6 +106,7 @@ app.use('/admin', (req, res, next) => {
   app.use('/', (req, res, next) => {
     return next();
   }, userSession, mainRoute);
+
 
 
 const port=process.env.PORT||3000

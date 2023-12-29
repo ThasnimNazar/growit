@@ -7,6 +7,7 @@ const WishlistSchema= new mongoose.Schema({
     },
     products:{
         type:Array,
+        ref:'Product',
         required:true
     }
 });

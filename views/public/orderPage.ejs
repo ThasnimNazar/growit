@@ -63,6 +63,7 @@
                      <div class="row">
                          <div class="col-md-12">
                              <div class="dashboard-wrapper user-dashboard">
+                                <% if (orders.length > 0) { %>
                                  <div class="table-responsive">
                                      <table class="table table-hover" id="myTable" >
                                          <thead>
@@ -117,10 +118,13 @@
                                                  </tr>
                                              <% }) %>
                                          </tbody>
-                                         
-                                     
-                                         
                                      </table>
+                                     <% } else { %>
+                                        <p>No orders to show</p>
+                                        <a href="/displayproducts">
+                                            <button type="button" class="btn1" style=" border-radius: 5px; background-color: rgb(252, 84, 173); font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; border-color:transparent;">Please Order</button>
+                                          </a>
+                                    <% } %>
                                  </div>
                              </div>
                          </div>

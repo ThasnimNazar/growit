@@ -37,8 +37,11 @@
                                         <p class="name" style="color: black;"><%=products[i].name%></a></p>
                                         <!-- <p class="font-xs text-truncate"></p> -->
                                     </td>
-                                    <td class="price" data-title="Price"><span>₹<%=products[i].price%> </span></td>
-                                    
+                                    <% if(products[i].discountedPrice>0){ %>
+                                    <td class="price" data-title="Price"><span>₹<%=products[i].discountedPrice%>
+                                      <% }else{ %>
+                                    <td class="price" data-title="Price"><span><%=products[i].price%> </span></td>
+                                    <% } %>
                                     <td class="text-right" data-title="Cart">
                                        
                                             <a class="btn btn-sm" onclick="addToCart('<%=products[i].item %>')"><i class="fas fa-shopping-cart"></i></a>
@@ -49,14 +52,12 @@
                                 </tr>
                                 <% } %>
                             </tbody>
-                            
-                            <% if(products.length===0) { %>
-                              <h5>Wishlist is empty</h5>
-                              <br>
-                              <% } %>
-                                
                         </table>
                 </div>
+                <% if(products.length===0) { %>
+                  <h5>Wishlist is empty</h5>
+                  <br>
+                  <% } %>
               </div>
             </div>
         </div>
@@ -93,7 +94,7 @@ $(document).ready(function () {
        $.ajax({
          url: "/deletewishlist", // The route to your Express server
          type: "POST",
-         data: { productId: productId }, // Send the product ID in the request body
+         data: { productId:productId.trim() }, // Send the product ID in the request body
          success: function (response) {
            // If the server returns a successful response, remove the product row from the table
            if (response.message === "Product deleted successfully") {
