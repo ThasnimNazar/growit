@@ -691,14 +691,18 @@ const addtoWishlist = async(req,res)=>{
                           price: 1,
                           discountedPrice: 1,
                           description: 1,
+                          isListed: 1,
+                          isProductListed : 1
+
                           
                         },
                       },
+                      { $match: { isListed: true,isProductListed:true } },
                     ],
                     as: "product",
                   },
                 },
-                { $unwind: "$product" },
+                { $unwind: "$product" },      
                 {
                   $project: {
                     _id: 0,
@@ -709,6 +713,7 @@ const addtoWishlist = async(req,res)=>{
                     price: "$product.price",
                     discountedPrice: "$product.discountedPrice",
                     description: "$product.description",
+                    isProductListed: "$isProductListed"
                     
                   },
                 },
