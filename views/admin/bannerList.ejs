@@ -96,21 +96,7 @@
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-        <script>
-            $(document).ready(function () {
-                // $.noConflict();
-
-                var table = $('#myTable').DataTable({
-                    "paging": true,          // Enable pagination
-                    "pageLength": 10,        // Number of rows per page
-                    "lengthMenu": [10, 25, 50, 75, 100],  // Dropdown options for rows per page
-                });
-
-                table.on('draw', function () {
-                    $(".paginate_button:not(.previous):not(.next)").addClass("number_button");
-                });
-            });
-        </script>
+        
 
         
 </body>

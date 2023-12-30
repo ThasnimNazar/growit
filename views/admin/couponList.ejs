@@ -34,9 +34,7 @@
                     <h2 class="content-title card-title">Coupon </h2>
                     <p>Add, edit or delete a category</p>
                 </div>
-                <div>
-                    <input type="text" placeholder="Search Categories" class="form-control bg-white">
-                </div>
+               
             </div>
             <div>
                 <a href="/admin/addcoupun" class="btn btn-primary mb-4">Create coupon</a>
@@ -48,7 +46,6 @@
                     <div class="card w-100">
                         <div class="card-body p-4">
                             <h5 class="card-title fw-semibold mb-4">Coupon List</h5>
-                            <a href="/admin/addCoupon"><span class="badge bg-primary rounded-3 fw-semibold mb-2">New Coupon</span></a>
                             <div class="table-responsive">
                                 <table class="table mb-0 align-middle" id="myTable">
                                     <thead>
@@ -109,21 +106,6 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-<script>
-$(document).ready(function () {
-// $.noConflict();
-
-var table = $('#myTable').DataTable({
-    "paging": true,          // Enable pagination
-    "pageLength": 10,        // Number of rows per page
-    "lengthMenu": [10, 25, 50, 75, 100],  // Dropdown options for rows per page
-});
-
-table.on('draw', function () {
-    $(".paginate_button:not(.previous):not(.next)").addClass("number_button");
-});
-});
-</script>
 
 <script>
 function removeCoupon(couponId){
