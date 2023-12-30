@@ -25,14 +25,14 @@ const addCart = async (productId, userId) => {
                 productId: productId,
                 quantity: 1,
                 total: (product.price)-((product.price)*discountPercentage)/100,
-                discountedPrice: Math.floor((product.price)-((product.price)*product.category.discountPercentage)/100)
+                discountedPrice: (product.price)-((product.price)*product.category.discountPercentage)/100
             }    
         }else{
             productObj = {
                 productId: productId,
                 quantity: 1,
                 total: (product.price)-((product.price)*discountPercentage)/100,
-                discountedPrice: Math.floor((product.price)-((product.price)*product.discountPercentage)/100)
+                discountedPrice: (product.price)-((product.price)*product.discountPercentage)/100
             }
         }
         
